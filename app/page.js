@@ -214,7 +214,7 @@ export default function Page() {
       <header className="header">
         <div className="container">
           <div className="header-content">
-            <h1 className="header-title">📚 Prompt Library</h1>
+            <h1 className="header-title">📚 Prompt Library B2B</h1>
             <div className="header-actions">
               <button
                 id="favorites-toggle"

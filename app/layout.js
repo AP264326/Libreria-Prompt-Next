@@ -6,7 +6,7 @@ import Script from 'next/script';
 
 export const metadata = {
   title: 'Prompt Library B2B,
-  description: 'Libreria di prompt B2B'
+  description: 'Libreria di prompt'
 };
 
 export default function RootLayout({ children }) {

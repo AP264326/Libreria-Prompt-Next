@@ -1057,3 +1057,15 @@ select.form-control {
 [data-color-scheme="dark"] .toast {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
+.prompt-card__actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.prompt-card__actions button {
+  flex: 0 0 auto;   /* non occupano tutta la larghezza */
+  min-width: 80px;  /* dimensione minima */
+  padding: 6px 12px;
+  font-size: 14px;
+}

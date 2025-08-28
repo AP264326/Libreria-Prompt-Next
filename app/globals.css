@@ -1097,7 +1097,7 @@ select.form-control {
   flex: 1;               /* ogni bottone occupa metà spazio */
   padding: 10px 0;       /* più alti */
   font-size: 14px;
-  border-radius: 0;      /* angoli dritti al centro */
+  border-radius: 6;      /* tutti gli angoli arrotondati */
 }
 
 /* Arrotondo solo gli angoli esterni */

@@ -1108,3 +1108,42 @@ select.form-control {
 .prompt-card__actions .favorite-btn:last-child {
   border-radius: 0 6px 6px 0;
 }
+/* Pulsanti a metà larghezza nella card */
+.prompt-card__actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.prompt-card__actions .btn-blue {
+  flex: 1;
+  padding: 10px 0;
+  font-size: 14px;
+  border-radius: 6px;
+  background-color: #2563eb;   /* blu */
+  color: white;
+  border: none;
+  transition: background 0.2s;
+}
+
+.prompt-card__actions .btn-blue:hover {
+  background-color: #1e40af;   /* blu più scuro al passaggio */
+}
+
+/* Pulsante preferiti (outline blu, sfondo bianco) */
+.prompt-card__actions .favorite-btn {
+  flex: 1;
+  padding: 10px 0;
+  font-size: 14px;
+  border-radius: 6px;
+  background-color: white;
+  color: #2563eb;
+  border: 2px solid #2563eb;
+  transition: all 0.2s;
+}
+
+/* quando attivo (aggiunto ai preferiti) */
+.prompt-card__actions .favorite-btn.active {
+  background-color: #2563eb;
+  color: white;
+}

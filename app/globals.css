@@ -1100,7 +1100,7 @@ select.form-control {
   border-radius: 6px;      /* tutti gli angoli arrotondati */
 }
 
-/* Arrotondo solo gli angoli esterni */
+/* tutti gli angoli arrotondati */
 .prompt-card__actions .btn-blue:first-child {
   border-radius: 6px 0 0 6px;
 }

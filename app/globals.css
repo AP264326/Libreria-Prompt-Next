@@ -1088,7 +1088,7 @@ select.form-control {
 /* Pulsanti a metà larghezza nella card */
 .prompt-card__actions {
   display: flex;
-  gap: 0; /* nessuno spazio tra i bottoni */
+  gap: 6; /* nessuno spazio tra i bottoni */
   margin-top: 12px;
 }
 

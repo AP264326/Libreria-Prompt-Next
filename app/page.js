@@ -395,7 +395,14 @@ export default function Page() {
             </div>
           )}
         </div>
-      </main>
+           </main>
+
+      {/* Footer */}
+      <footer className="footer">
+        <div className="container">
+          <p>Realizzato da <strong>Alfredo Palermi</strong></p>
+        </div>
+      </footer>
 
       <div
         id="toast"
@@ -408,3 +415,4 @@ export default function Page() {
     </>
   );
 }
+

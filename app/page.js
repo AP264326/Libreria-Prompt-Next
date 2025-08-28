@@ -21,7 +21,7 @@ function escapeHtml(text = '') {
   return String(text).replace(/[&<>"']/g, (ch) =>
     ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch])
   );
-}
+
 function sanitizeFilename(filename) {
   return filename.replace(/[^a-z0-9\s\-_]/gi, '_').toLowerCase();
 }

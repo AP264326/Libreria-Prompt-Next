@@ -1205,3 +1205,10 @@ select.form-control {
   background: #2563eb;
   color: #fff;
 }
+/* Griglia più fluida */
+.prompts-grid {
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+@media (max-width: 380px) {
+  .prompts-grid { grid-template-columns: 1fr; }
+}

@@ -1172,3 +1172,36 @@ select.form-control {
 .footer strong {
   color: #fff; /* il tuo nome in bianco */
 }
+/* Respiro sotto ai bottoni */
+.prompt-card { padding-bottom: 20px; }
+
+/* Miglior focus per accessibilità */
+.btn-blue:focus, .favorite-btn:focus {
+  outline: 2px solid #93c5fd;
+  outline-offset: 2px;
+}
+
+/* Due pulsanti metà/metà con gap e bordi arrotondati */
+.prompt-card__actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+.prompt-card__actions .btn-blue,
+.prompt-card__actions .favorite-btn {
+  flex: 1;
+  padding: 10px 0;
+  font-size: 14px;
+  border-radius: 6px;
+}
+
+/* Stile "preferiti" outline */
+.prompt-card__actions .favorite-btn {
+  background: #fff;
+  color: #2563eb;
+  border: 2px solid #2563eb;
+}
+.prompt-card__actions .favorite-btn.active {
+  background: #2563eb;
+  color: #fff;
+}

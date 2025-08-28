@@ -1085,3 +1085,26 @@ select.form-control {
   padding: 6px 10px;
   font-size: 13px;
 }
+/* Pulsanti a metà larghezza nella card */
+.prompt-card__actions {
+  display: flex;
+  gap: 0; /* nessuno spazio tra i bottoni */
+  margin-top: 12px;
+}
+
+.prompt-card__actions .btn-blue,
+.prompt-card__actions .favorite-btn {
+  flex: 1;               /* ogni bottone occupa metà spazio */
+  padding: 10px 0;       /* più alti */
+  font-size: 14px;
+  border-radius: 0;      /* angoli dritti al centro */
+}
+
+/* Arrotondo solo gli angoli esterni */
+.prompt-card__actions .btn-blue:first-child {
+  border-radius: 6px 0 0 6px;
+}
+
+.prompt-card__actions .favorite-btn:last-child {
+  border-radius: 0 6px 6px 0;
+}

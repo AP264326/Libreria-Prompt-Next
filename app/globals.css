@@ -1159,3 +1159,16 @@ select.form-control {
 .footer strong {
   color: #fff; /* oppure blu se vuoi evidenziarlo */
 }
+.footer {
+  margin-top: 40px;
+  padding: 20px 0;
+  text-align: center;
+  font-size: 14px;
+  color: #ddd;
+  background-color: #111; /* footer nero */
+  border-top: 1px solid #333;
+}
+
+.footer strong {
+  color: #fff; /* il tuo nome in bianco */
+}

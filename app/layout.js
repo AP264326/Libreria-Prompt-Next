@@ -5,8 +5,8 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import Script from 'next/script';
 
 export const metadata = {
-  title: 'Prompt Library - Consulenza Energetica',
-  description: 'Libreria di prompt'
+  title: 'Prompt Library B2B,
+  description: 'Libreria di prompt B2B'
 };
 
 export default function RootLayout({ children }) {

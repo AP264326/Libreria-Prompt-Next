@@ -17,10 +17,11 @@ const PROMPTS_DATA = [
   // ...incolla il resto dell'array da app.js...
 ];
 
-function escapeHtml(text) {
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
+function escapeHtml(text = '') {
+  return String(text).replace(/[&<>"']/g, (ch) =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch])
+  );
+}
 }
 function sanitizeFilename(filename) {
   return filename.replace(/[^a-z0-9\s\-_]/gi, '_').toLowerCase();

@@ -399,10 +399,10 @@ export default function Page() {
 
       {/* Footer */}
       <footer className="footer">
-        <div className="container">
-          <p>Realizzato da <strong>Alfredo Palermi</strong></p>
-        </div>
-      </footer>
+  <div className="container">
+    <p>Realizzato con ❤️ da <strong>Alfredo Palermi</strong></p>
+  </div>
+</footer>
 
       <div
         id="toast"

@@ -1,7 +1,8 @@
 {
-  "name": "prompt-library-next",
+  "name": "libreria-prompt-next",
   "private": true,
   "version": "1.0.0",
+  "engines": { "node": ">=18" },
   "scripts": {
     "dev": "next dev -p 3000",
     "build": "next build",
@@ -9,10 +10,10 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@vercel/analytics": "latest",
-    "@vercel/speed-insights": "latest",
     "next": "latest",
     "react": "latest",
-    "react-dom": "latest"
+    "react-dom": "latest",
+    "@vercel/analytics": "latest",
+    "@vercel/speed-insights": "latest"
   }
 }

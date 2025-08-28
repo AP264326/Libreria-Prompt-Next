@@ -1053,3 +1053,35 @@ select.form-control {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   }
 }
+/* ====== Ottimizzazione pulsanti nelle card ====== */
+.prompt-card__actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+/* Evita che i bottoni si allarghino a 100% */
+.prompt-card__actions .btn-blue {
+  width: auto !important;
+  flex: 0 0 auto;
+  padding: 8px 14px;
+  font-size: 14px;
+  line-height: 1.2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Stellina compatta */
+.prompt-card__actions .favorite-btn {
+  min-width: 44px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+/* Bottoni export più piccoli e vicini */
+.prompt-card__actions .btn--sm {
+  padding: 6px 10px;
+  font-size: 13px;
+}

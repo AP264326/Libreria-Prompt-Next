@@ -370,25 +370,21 @@ export default function Page() {
                 </div>
                 <div className="prompt-card__description">{p.description}</div>
                 <div className="prompt-card__actions">
-                  <button className="btn-blue" onClick={() => copyPrompt(p.id)} aria-label="Copia prompt">📋 Copia</button>
-                  <button
-                    className={`btn-blue favorite-btn ${favorites.has(p.id) ? 'active' : ''}`}
-                    onClick={() => toggleFavorite(p.id)}
-                    aria-label={favorites.has(p.id) ? 'Rimuovi dai preferiti' : 'Aggiungi ai preferiti'}
-                  >
-                    {favorites.has(p.id) ? '⭐' : '☆'}
-                  </button>
-                  <div className="export-dropdown">
-                    <button className="btn-blue export-btn" onClick={() => { /* gestione UI semplice via React */}} aria-label="Esporta prompt">
-                      📤 Export
-                    </button>
-                    {/* Sostituisco il vecchio dropdown "apri/chiudi" con due bottoni diretti: */}
-                    <div className="prompt-card__actions" style={{ marginTop: 8 }}>
-                      <button className="btn-blue btn--sm" onClick={() => exportPrompt(p.id, 'txt')}>.txt</button>
-                      <button className="btn-blue btn--sm" onClick={() => exportPrompt(p.id, 'md')}>.md</button>
-                    </div>
-                  </div>
-                </div>
+  <button
+    className="btn-blue"
+    onClick={() => copyPrompt(p.id)}
+    aria-label="Copia prompt"
+  >
+    📋 Copia
+  </button>
+  <button
+    className={`btn-blue favorite-btn ${favorites.has(p.id) ? 'active' : ''}`}
+    onClick={() => toggleFavorite(p.id)}
+    aria-label={favorites.has(p.id) ? 'Rimuovi dai preferiti' : 'Aggiungi ai preferiti'}
+  >
+    {favorites.has(p.id) ? '⭐' : '☆'}
+  </button>
+</div>
               </div>
             ))}
           </div>

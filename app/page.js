@@ -4,9 +4,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 const PROMPTS_DATA = [
-  // === Copiato dal tuo app.js ===
-  // (incolla qui l'array completo come nel file originale)
-  // Ho lasciato invariati id, title, category, description, text.
+  // === I TUOI PROMPT ===
   {
     "id": "s1",
     "title": "Scouting – Elenco aziende B2B",
@@ -93,14 +91,25 @@ const PROMPTS_DATA = [
   }
 ];
 
+// --- helper ---
 function escapeHtml(text = '') {
   return String(text).replace(/[&<>"']/g, (ch) =>
     ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch])
   );
 }
-
 function sanitizeFilename(filename) {
   return filename.replace(/[^a-z0-9\s\-_]/gi, '_').toLowerCase();
+}
+function escapeRegExp(str = '') {
+  return String(str).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+function highlight(text = '', query = '') {
+  if (!query || !query.trim()) return escapeHtml(text);
+  const words = query.trim().split(/\s+/).filter(w => w.length >= 2).map(escapeRegExp);
+  if (words.length === 0) return escapeHtml(text);
+  const re = new RegExp(`(${words.join('|')})`, 'gi');
+  const safe = escapeHtml(text);
+  return safe.replace(re, '<mark>$1</mark>');
 }
 
 export default function Page() {
@@ -111,9 +120,12 @@ export default function Page() {
   const [toastMsg, setToastMsg] = useState('');
   const [toastVisible, setToastVisible] = useState(false);
 
+  // stato modale
+  const [modalOpen, setModalOpen] = useState(false);
+  const [activePrompt, setActivePrompt] = useState(null);
+
   const fileInputRef = useRef(null);
 
-  // Carica preferiti da sessionStorage (come nel tuo app.js)
   useEffect(() => {
     try {
       const saved = sessionStorage.getItem('promptFavorites');
@@ -121,14 +133,19 @@ export default function Page() {
     } catch {}
   }, []);
 
-  // Mostra toast 3s
+  // ESC chiude modale
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === 'Escape') closeDetails(); };
+    if (modalOpen) window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [modalOpen]);
+
   const showToast = (msg) => {
     setToastMsg(msg);
     setToastVisible(true);
     setTimeout(() => setToastVisible(false), 3000);
   };
 
-  // Salva preferiti
   const persistFavorites = (next) => {
     setFavorites(next);
     try {
@@ -157,7 +174,6 @@ export default function Page() {
       await navigator.clipboard.writeText(p.text);
       showToast('Prompt copiato negli appunti!');
     } catch {
-      // fallback classico
       const ta = document.createElement('textarea');
       ta.value = p.text;
       ta.style.position = 'fixed';
@@ -211,51 +227,32 @@ export default function Page() {
     URL.revokeObjectURL(url);
     showToast(`File ${format.toUpperCase()} scaricato!`);
   };
-function escapeHtml(text = '') {
-  return String(text).replace(/[&<>"']/g, (ch) =>
-    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch])
-  );
-}   // 👈 qui si chiude escapeHtml
 
-// 👇 incolla subito dopo
-function escapeRegExp(str = '') {
-  return String(str).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
-function highlight(text = '', query = '') {
-  if (!query || !query.trim()) return escapeHtml(text);
-
-  const words = query
-    .trim()
-    .split(/\s+/)
-    .filter(w => w.length >= 2)
-    .map(escapeRegExp);
-
-  if (words.length === 0) return escapeHtml(text);
-
-  const re = new RegExp(`(${words.join('|')})`, 'gi');
-  const safe = escapeHtml(text);
-  return safe.replace(re, '<mark>$1</mark>');
-}
+  // Modale open/close
+  function openDetails(p) {
+    setActivePrompt(p);
+    setModalOpen(true);
+    try { document.body.style.overflow = 'hidden'; } catch {}
+  }
+  function closeDetails() {
+    setModalOpen(false);
+    setActivePrompt(null);
+    try { document.body.style.overflow = ''; } catch {}
+  }
 
   // Import .docx con mammoth (browser)
   const handleDocx = async (file) => {
     try {
       showToast('Caricamento file in corso...');
       const arrayBuffer = await file.arrayBuffer();
-      // window.mammoth viene dallo Script in layout.js
       const result = await window.mammoth.extractRawText({ arrayBuffer });
       const newPrompts = parseDocxContent(result.value);
       if (newPrompts.length === 0) {
         showToast('Nessun prompt valido trovato nel file.');
         return;
       }
-      // Sostituisco i dati in memoria locale solo per questa sessione
-      // (Qui semplice: ricarico la pagina con i nuovi dati in memoria)
-      // In un’app reale potresti usare uno stato globale o persistere.
       PROMPTS_DATA.length = 0;
       newPrompts.forEach((np) => PROMPTS_DATA.push(np));
-      // Reset UI
       persistFavorites(new Set());
       setShowOnlyFav(false);
       setSearch('');
@@ -267,7 +264,6 @@ function highlight(text = '', query = '') {
     }
   };
 
-  // Parser identico alla tua versione
   function parseDocxContent(text) {
     const prompts = [];
     const lines = text.split('\n').map((l) => l.trim()).filter(Boolean);
@@ -291,9 +287,7 @@ function highlight(text = '', query = '') {
         for (let j = i + 1; j < Math.min(i + 3, lines.length); j++) {
           const nl = lines[j];
           if (nl.length < 50 && !nl.includes('.') && !nl.includes(':')) {
-            current.category = nl;
-            i = j;
-            break;
+            current.category = nl; i = j; break;
           }
         }
         if (!current.category) current.category = 'Importato';
@@ -391,26 +385,43 @@ function highlight(text = '', query = '') {
             {filtered.length === 0 ? null : filtered.map((p) => (
               <div className="prompt-card" key={p.id}>
                 <div className="prompt-card__header">
-                  <h3 className="prompt-card__title" dangerouslySetInnerHTML={{ __html: escapeHtml(p.title) }} />
+                  <h3
+                    className="prompt-card__title"
+                    dangerouslySetInnerHTML={{ __html: highlight(p.title, search) }}
+                  />
                   <span className="prompt-card__category">{p.category}</span>
                 </div>
-                <div className="prompt-card__description">{p.description}</div>
+
+                <div
+                  className="prompt-card__description clamp-2"
+                  dangerouslySetInnerHTML={{ __html: highlight(p.description, search) }}
+                />
+                <div className="prompt-card__meta">
+                  <button
+                    className="link-btn details-btn"
+                    onClick={() => openDetails(p)}
+                    aria-label={`Apri dettagli del prompt ${p.title}`}
+                  >
+                    Dettagli ⤵︎
+                  </button>
+                </div>
+
                 <div className="prompt-card__actions">
-  <button
-    className="btn-blue"
-    onClick={() => copyPrompt(p.id)}
-    aria-label="Copia prompt"
-  >
-    📋 Copia
-  </button>
-  <button
-    className={`btn-blue favorite-btn ${favorites.has(p.id) ? 'active' : ''}`}
-    onClick={() => toggleFavorite(p.id)}
-    aria-label={favorites.has(p.id) ? 'Rimuovi dai preferiti' : 'Aggiungi ai preferiti'}
-  >
-    {favorites.has(p.id) ? '⭐' : '☆'}
-  </button>
-</div>
+                  <button
+                    className="btn-blue"
+                    onClick={() => copyPrompt(p.id)}
+                    aria-label="Copia prompt"
+                  >
+                    📋 Copia
+                  </button>
+                  <button
+                    className={`btn-blue favorite-btn ${favorites.has(p.id) ? 'active' : ''}`}
+                    onClick={() => toggleFavorite(p.id)}
+                    aria-label={favorites.has(p.id) ? 'Rimuovi dai preferiti' : 'Aggiungi ai preferiti'}
+                  >
+                    {favorites.has(p.id) ? '⭐' : '☆'}
+                  </button>
+                </div>
               </div>
             ))}
           </div>
@@ -421,14 +432,52 @@ function highlight(text = '', query = '') {
             </div>
           )}
         </div>
-           </main>
+      </main>
+
+      {/* Modale Dettagli */}
+      {modalOpen && activePrompt && (
+        <div
+          className="modal-backdrop"
+          onClick={(e) => {
+            if (e.target.classList.contains('modal-backdrop')) closeDetails();
+          }}
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Dettagli prompt: ${activePrompt.title}`}
+        >
+          <div className="modal">
+            <div className="modal__header">
+              <h3 className="modal__title">{activePrompt.title}</h3>
+              <button className="modal__close" onClick={closeDetails} aria-label="Chiudi">✕</button>
+            </div>
+
+            <div className="modal__category">{activePrompt.category}</div>
+            <p className="modal__desc">{activePrompt.description}</p>
+
+            <div className="modal__body">
+              <pre className="modal__code">{activePrompt.text}</pre>
+            </div>
+
+            <div className="modal__actions">
+              <button className="btn-blue" onClick={() => copyPrompt(activePrompt.id)}>📋 Copia prompt</button>
+              <button
+                className={`btn-blue favorite-btn ${favorites.has(activePrompt.id) ? 'active' : ''}`}
+                onClick={() => toggleFavorite(activePrompt.id)}
+              >
+                {favorites.has(activePrompt.id) ? '⭐ Rimuovi dai preferiti' : '☆ Aggiungi ai preferiti'}
+              </button>
+              <button className="btn-blue btn-ghost" onClick={closeDetails}>Chiudi</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Footer */}
       <footer className="footer">
-  <div className="container">
-    <p>Realizzato con ❤️ da <strong>Alfredo Palermi</strong></p>
-  </div>
-</footer>
+        <div className="container">
+          <p>Realizzato con ❤️ da <strong>Alfredo Palermi</strong></p>
+        </div>
+      </footer>
 
       <div
         id="toast"
@@ -441,4 +490,3 @@ function highlight(text = '', query = '') {
     </>
   );
 }
-

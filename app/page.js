@@ -197,37 +197,6 @@ export default function Page() {
     persistFavorites(next);
   };
 
-  const exportPrompt = (id, format) => {
-    const p = PROMPTS_DATA.find((x) => x.id === id);
-    if (!p) return;
-
-    let content = '';
-    let filename = '';
-    let mime = '';
-
-    if (format === 'txt') {
-      content = `${p.title}\n${'='.repeat(p.title.length)}\n\nCategoria: ${p.category}\n\nDescrizione: ${p.description}\n\nPrompt:\n${p.text}`;
-      filename = `${sanitizeFilename(p.title)}.txt`;
-      mime = 'text/plain';
-    } else {
-      content = `# ${p.title}\n\n**Categoria:** ${p.category}\n\n**Descrizione:** ${p.description}\n\n## Prompt\n\n${p.text}`;
-      filename = `${sanitizeFilename(p.title)}.md`;
-      mime = 'text/markdown';
-    }
-
-    const blob = new Blob([content], { type: mime });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    a.style.display = 'none';
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-    showToast(`File ${format.toUpperCase()} scaricato!`);
-  };
-
   // Modale open/close
   function openDetails(p) {
     setActivePrompt(p);
@@ -251,8 +220,10 @@ export default function Page() {
         showToast('Nessun prompt valido trovato nel file.');
         return;
       }
+      // Sostituisco i dati in memoria locale
       PROMPTS_DATA.length = 0;
       newPrompts.forEach((np) => PROMPTS_DATA.push(np));
+      // Reset UI
       persistFavorites(new Set());
       setShowOnlyFav(false);
       setSearch('');
@@ -396,6 +367,7 @@ export default function Page() {
                   className="prompt-card__description clamp-2"
                   dangerouslySetInnerHTML={{ __html: highlight(p.description, search) }}
                 />
+
                 <div className="prompt-card__meta">
                   <button
                     className="link-btn details-btn"

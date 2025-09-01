@@ -6,13 +6,89 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 // === dati prompt (li ho lasciati uguali a prima, tagliati per brevità ===
 const PROMPTS_DATA = [
   {
-    "id": "s1",
-    "title": "Scouting – Elenco aziende B2B",
-    "category": "Scouting",
-    "description": "Genera un elenco dettagliato di aziende B2B nel settore scelto e nella provincia indicata, con filtri su dipendenti e output in Excel.",
-    "text": "Genera un elenco dettagliato..."
+    id: "s1",
+    title: "Scouting – Elenco aziende B2B",
+    category: "Scouting",
+    description: "Genera un elenco dettagliato di aziende B2B nel settore scelto e nella provincia indicata, con filtri su dipendenti e output in Excel.",
+    text: "Genera un elenco dettagliato di aziende B2B nel settore [settore/categoria] situate nella provincia di [nome provincia] con un consumo energetico annuo superiore a [kWh]. Per ogni azienda, includi: Nome, Settore, Dipendenti, Indirizzo, Sito web, Email, Telefono, Persone chiave con ruolo e LinkedIn, Fonte dei dati, Valutazione potenziale (1-5), Note aggiuntive.\n\nRequisiti: aziende con almeno [n. dipendenti], sede in [provincia].\nOutput: tabella ordinata per interesse (5→1), più file Excel scaricabile."
   },
-  // ... altri prompt ...
+  {
+    id: "p1",
+    title: "Profilazione Cliente B2B (Identikit)",
+    category: "Profilazione Cliente B2B (Identikit)",
+    description: "Analizza un'azienda target e redigi un identikit energetico completo con opportunità commerciali.",
+    text: "Analizza l'azienda [NOME AZIENDA] e crea un identikit orientato alla consulenza energetica: profilo generale, dimensioni e struttura, consumi stimati, approvvigionamento energetico attuale, impianti presenti, iniziative ESG, opportunità e criticità. Restituisci in formato scheda professionale."
+  },
+  {
+    id: "pr1",
+    title: "Prospecting – Pacchetto primo contatto",
+    category: "Prospecting",
+    description: "Email di presentazione, script telefonico, domande e obiezioni per il primo contatto con cliente potenziale.",
+    text: "Crea un pacchetto con i miei dati [nome, ruolo, contatti] per il potenziale cliente [nome cliente]. Include: (1) email di presentazione con proposta check-up bolletta, (2) script telefonico per fissare appuntamento, (3) 3 domande chiave, (4) 3 obiezioni comuni con risposte professionali."
+  },
+  {
+    id: "pp1",
+    title: "Proposition – Offerta impianto FV",
+    category: "Proposition",
+    description: "Proposta commerciale fotovoltaico con ROI e confronto bolletta.",
+    text: "Crea una proposta commerciale per [azienda] con impianto FV da [kWp], ROI stimato [X] anni, confronto bolletta attuale vs post-installazione, benefici economici ed ESG."
+  },
+  {
+    id: "se1",
+    title: "Simulatore Elettrico – Estrazione fattura",
+    category: "Simulatore Elettrico",
+    description: "Estrai e riassumi dati di consumo da fattura PDF.",
+    text: "Ruolo: estrattore dati fattura.\nInput: file PDF.\nAttività: estrai consumi (kWh per fasce), servizi, quantità, prezzi, condizioni contrattuali. Output: tabella riassuntiva con note su dati mancanti."
+  },
+  {
+    id: "se2",
+    title: "Simulatore Elettrico – Analizzatore offerte",
+    category: "Simulatore Elettrico",
+    description: "Analizza offerte da file Excel e prepara tabella confronto.",
+    text: "Input: Excel offerte energia. Attività: leggi formule prezzo (PUN, MIX, FIX, ABB+PUN), gestisci PCV=0, struttura tabella completa. Output: tabella pulita pronta al confronto."
+  },
+  {
+    id: "se3",
+    title: "Simulatore Elettrico – Confronto offerte",
+    category: "Simulatore Elettrico",
+    description: "Confronta offerte e identifica la migliore opzione.",
+    text: "Input: dati fattura + tabella offerte.\nAttività: calcola costo stimato per ogni offerta, confronta condizioni contrattuali, ordina per convenienza, evidenzia vincoli. Output: tabella confronto + sintesi raccomandazioni."
+  },
+  {
+    id: "se4",
+    title: "Simulatore Elettrico – Report finale",
+    category: "Simulatore Elettrico",
+    description: "Genera report finale con raccomandazioni.",
+    text: "Input: tabella confronto offerte.\nAttività: crea report testuale chiaro con offerta consigliata, risparmio, vantaggi contrattuali, vincoli, azioni successive."
+  },
+  {
+    id: "fv1",
+    title: "Preventivatore FV – Pre-preventivo",
+    category: "Preventivatore Simulatore FV",
+    description: "Calcola pre-preventivo fotovoltaico con scenari e ROI.",
+    text: "Input: consumi annui, superficie, località, tecnologia FV, costi unitari.\nAttività: calcola costi, produzione, autoconsumo, risparmio, ROI, incentivi 2025. Genera grafico scenari (base, accumulo, accumulo+colonnina) e report PDF scaricabile."
+  },
+  {
+    id: "lc1",
+    title: "Lettura Consumi Next – Analisi fasce",
+    category: "Lettura Consumi Next",
+    description: "Calcola consumi annui per fasce orarie e genera grafico.",
+    text: "Input: dati Next.\nAttività: calcola consumi annui per F1/F2/F3 e totale, genera tabella Excel scaricabile e grafico a linee mensile. Output: analisi tecnica + visual."
+  },
+  {
+    id: "nf1",
+    title: "Negoziazione – Follow-up cliente",
+    category: "Negoziazione/Follow-up",
+    description: "Email e script telefonico per follow-up dopo proposta inviata.",
+    text: "Crea pacchetto follow-up per cliente [nome]. Include: email di richiamo, script telefonico, 3 domande chiave, 3 obiezioni con risposte."
+  },
+  {
+    id: "cb1",
+    title: "Gestione Customer Base – Email post installazione",
+    category: "Gestione Customer Base",
+    description: "Email di ringraziamento, assistenza e richiesta feedback post installazione.",
+    text: "Scrivi email post-installazione: ringraziamento, assistenza, richiesta feedback. Tono professionale e cordiale."
+  }
 ];
 
 // --- helper ---

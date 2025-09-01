@@ -211,6 +211,32 @@ export default function Page() {
     URL.revokeObjectURL(url);
     showToast(`File ${format.toUpperCase()} scaricato!`);
   };
+function escapeHtml(text = '') {
+  return String(text).replace(/[&<>"']/g, (ch) =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch])
+  );
+}   // 👈 qui si chiude escapeHtml
+
+// 👇 incolla subito dopo
+function escapeRegExp(str = '') {
+  return String(str).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function highlight(text = '', query = '') {
+  if (!query || !query.trim()) return escapeHtml(text);
+
+  const words = query
+    .trim()
+    .split(/\s+/)
+    .filter(w => w.length >= 2)
+    .map(escapeRegExp);
+
+  if (words.length === 0) return escapeHtml(text);
+
+  const re = new RegExp(`(${words.join('|')})`, 'gi');
+  const safe = escapeHtml(text);
+  return safe.replace(re, '<mark>$1</mark>');
+}
 
   // Import .docx con mammoth (browser)
   const handleDocx = async (file) => {

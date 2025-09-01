@@ -412,46 +412,54 @@ mark { background: #fde68a; color: #111; padding: 0 2px; border-radius: 3px; }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Modale Dettagli */
+/* ===== Modale Dettagli ===== */
 .modal-backdrop {
-  position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.6);
   display: flex; align-items: center; justify-content: center;
-  padding: 24px; z-index: 1000;
+  padding: 24px;
+  z-index: 1000;
 }
 .modal {
-  background: #0f172a; color: #e5e7eb;
-  max-width: 880px; width: 100%; border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5); overflow: hidden;
+  background: #0f172a;         /* scuro elegante */
+  color: #e5e7eb;
+  max-width: 880px; width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  overflow: hidden;
 }
 .modal__header {
   display: flex; justify-content: space-between; align-items: center;
   padding: 16px 20px; border-bottom: 1px solid #1f2937;
 }
-.modal__title { font-size: 18px; margin: 0; }
-.modal__close { background: transparent; border: none; color: #9ca3af; font-size: 20px; cursor: pointer; }
+.modal__title {
+  font-size: 18px;
+  margin: 0;
+  color: #e5e7eb; /* forza testo chiaro */
+}
+.modal__close {
+  background: transparent; border: none; color: #9ca3af;
+  font-size: 20px; cursor: pointer;
+}
 .modal__close:hover { color: #fff; }
 .modal__category { padding: 10px 20px; color: #93c5fd; font-size: 14px; }
 .modal__desc { padding: 0 20px 10px 20px; color: #cbd5e1; }
 .modal__body { padding: 0 20px 20px 20px; }
 .modal__code {
-  white-space: pre-wrap; background: #0b1220; border: 1px solid #1f2937;
-  border-radius: 8px; padding: 14px; max-height: 50vh; overflow: auto;
+  white-space: pre-wrap;
+  background: #0b1220;
+  border: 1px solid #1f2937;
+  border-radius: 8px;
+  padding: 14px;
+  max-height: 50vh; overflow: auto;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  font-size: 13.5px; line-height: 1.5;
+  font-size: 13.5px;
+  line-height: 1.5;
 }
-.modal__actions { display: flex; gap: 10px; padding: 16px 20px; border-top: 1px solid #1f2937; }
-.btn-ghost { background: transparent; color: #e5e7eb; border: 1px solid #374151; }
+.modal__actions {
+  display: flex; gap: 10px; padding: 16px 20px; border-top: 1px solid #1f2937;
+}
+.btn-ghost {
+  background: transparent; color: #e5e7eb; border: 1px solid #374151;
+}
 .btn-ghost:hover { background: #111827; }
-
-/* Footer (nero) */
-.footer {
-  margin-top: 40px; padding: 20px 0; text-align: center;
-  font-size: 14px; color: #ddd; background-color: #111; border-top: 1px solid #333;
-}
-.footer strong { color: #fff; }
-
-/* Font */
-@font-face {
-  font-family: 'FKGroteskNeue';
-  src: url('https://r2cdn.perplexity.ai/fonts/FKGroteskNeue.woff2') format('woff2');
-}

@@ -120,12 +120,16 @@ export default function Page() {
   const [toastMsg, setToastMsg] = useState('');
   const [toastVisible, setToastVisible] = useState(false);
 
-  // stato modale
+  // stato modale prompt
   const [modalOpen, setModalOpen] = useState(false);
   const [activePrompt, setActivePrompt] = useState(null);
 
+  // stato modale disclaimer
+  const [disclaimerOpen, setDisclaimerOpen] = useState(false);
+
   const fileInputRef = useRef(null);
 
+  // Preferiti da session
   useEffect(() => {
     try {
       const saved = sessionStorage.getItem('promptFavorites');
@@ -133,7 +137,15 @@ export default function Page() {
     } catch {}
   }, []);
 
-  // ESC chiude modale
+  // Apri disclaimer al primo accesso finché non accettato
+  useEffect(() => {
+    try {
+      const accepted = localStorage.getItem('plb2b_disclaimer') === 'accepted';
+      if (!accepted) setDisclaimerOpen(true);
+    } catch {}
+  }, []);
+
+  // ESC chiude modale prompt
   useEffect(() => {
     const onKey = (e) => { if (e.key === 'Escape') closeDetails(); };
     if (modalOpen) window.addEventListener('keydown', onKey);
@@ -197,7 +209,7 @@ export default function Page() {
     persistFavorites(next);
   };
 
-  // Modale open/close
+  // Modale prompt open/close
   function openDetails(p) {
     setActivePrompt(p);
     setModalOpen(true);
@@ -207,6 +219,12 @@ export default function Page() {
     setModalOpen(false);
     setActivePrompt(null);
     try { document.body.style.overflow = ''; } catch {}
+  }
+
+  // Disclaimer accept/close
+  function acceptDisclaimer() {
+    try { localStorage.setItem('plb2b_disclaimer', 'accepted'); } catch {}
+    setDisclaimerOpen(false);
   }
 
   // Import .docx con mammoth (browser)
@@ -406,7 +424,7 @@ export default function Page() {
         </div>
       </main>
 
-      {/* Modale Dettagli */}
+      {/* Modale Dettagli Prompt */}
       {modalOpen && activePrompt && (
         <div
           className="modal-backdrop"
@@ -444,10 +462,54 @@ export default function Page() {
         </div>
       )}
 
+      {/* Modale Disclaimer */}
+      {disclaimerOpen && (
+        <div
+          className="modal-backdrop"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Disclaimer della libreria"
+          onClick={(e) => {
+            if (e.target.classList.contains('modal-backdrop')) setDisclaimerOpen(false);
+          }}
+        >
+          <div className="modal">
+            <div className="modal__header">
+              <h3 className="modal__title">Disclaimer</h3>
+              <button className="modal__close" onClick={() => setDisclaimerOpen(false)} aria-label="Chiudi">✕</button>
+            </div>
+
+            <div className="modal__body" style={{ paddingTop: 12 }}>
+              <p className="modal__desc">
+                Questa libreria di prompt è fornita a scopo informativo e di supporto operativo.
+                I contenuti e gli output generati potrebbero contenere imprecisioni: verifica sempre le informazioni
+                prima di usarle in contesti commerciali o contrattuali.
+              </p>
+              <ul className="modal__desc" style={{ marginTop: 10 }}>
+                <li>Non condividere dati sensibili o riservati.</li>
+                <li>Controlla fonti, numeri e calcoli prima dell’invio al cliente.</li>
+                <li>Se un’informazione non è disponibile, indicarla come “Non reperibile”.</li>
+              </ul>
+              <p className="modal__desc" style={{ marginTop: 10 }}>
+                Proseguendo accetti che l’uso dei contenuti è sotto la tua responsabilità.
+              </p>
+            </div>
+
+            <div className="modal__actions">
+              <button className="btn-blue" onClick={acceptDisclaimer}>Accetto</button>
+              <button className="btn-blue btn-ghost" onClick={() => setDisclaimerOpen(false)}>Chiudi</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Footer */}
       <footer className="footer">
-        <div className="container">
-          <p>Realizzato con ❤️ da <strong>Alfredo Palermi</strong></p>
+        <div className="container" style={{ display: 'flex', gap: 12, justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap' }}>
+          <p style={{ margin: 0 }}>Realizzato con ❤️ da <strong>Alfredo Palermi</strong></p>
+          <button className="link-btn" onClick={() => setDisclaimerOpen(true)} aria-label="Apri disclaimer">
+            Disclaimer
+          </button>
         </div>
       </footer>
 
@@ -462,4 +524,3 @@ export default function Page() {
     </>
   );
 }
-

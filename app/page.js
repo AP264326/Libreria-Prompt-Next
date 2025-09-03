@@ -120,16 +120,15 @@ export default function Page() {
   const [toastMsg, setToastMsg] = useState('');
   const [toastVisible, setToastVisible] = useState(false);
 
-  // stato modale prompt
+  // stato modale
   const [modalOpen, setModalOpen] = useState(false);
   const [activePrompt, setActivePrompt] = useState(null);
 
-  // stato modale disclaimer
-  const [disclaimerOpen, setDisclaimerOpen] = useState(false);
+  // gating import
+  const [canImport, setCanImport] = useState(false);
 
   const fileInputRef = useRef(null);
 
-  // Preferiti da session
   useEffect(() => {
     try {
       const saved = sessionStorage.getItem('promptFavorites');
@@ -137,15 +136,30 @@ export default function Page() {
     } catch {}
   }, []);
 
-  // Apri disclaimer al primo accesso finché non accettato
+  // Abilita import solo con ?admin=1 + PIN valido in sessione
   useEffect(() => {
     try {
-      const accepted = localStorage.getItem('plb2b_disclaimer') === 'accepted';
-      if (!accepted) setDisclaimerOpen(true);
+      const params = new URLSearchParams(window.location.search);
+      const isAdmin = params.get('admin') === '1';
+      const alreadyOk = sessionStorage.getItem('import_ok') === '1';
+      setCanImport(isAdmin && alreadyOk);
     } catch {}
   }, []);
 
-  // ESC chiude modale prompt
+  function askForPin() {
+    try {
+      const pin = prompt('Inserisci PIN per abilitare l’import:');
+      // 👇 PIN "soft" (non sicurezza reale). Cambialo quando vuoi.
+      if (pin === 'ALFREDO2025') {
+        sessionStorage.setItem('import_ok', '1');
+        setCanImport(true);
+      } else if (pin !== null) {
+        alert('PIN errato');
+      }
+    } catch {}
+  }
+
+  // ESC chiude modale
   useEffect(() => {
     const onKey = (e) => { if (e.key === 'Escape') closeDetails(); };
     if (modalOpen) window.addEventListener('keydown', onKey);
@@ -209,7 +223,7 @@ export default function Page() {
     persistFavorites(next);
   };
 
-  // Modale prompt open/close
+  // Modale open/close
   function openDetails(p) {
     setActivePrompt(p);
     setModalOpen(true);
@@ -219,12 +233,6 @@ export default function Page() {
     setModalOpen(false);
     setActivePrompt(null);
     try { document.body.style.overflow = ''; } catch {}
-  }
-
-  // Disclaimer accept/close
-  function acceptDisclaimer() {
-    try { localStorage.setItem('plb2b_disclaimer', 'accepted'); } catch {}
-    setDisclaimerOpen(false);
   }
 
   // Import .docx con mammoth (browser)
@@ -294,6 +302,10 @@ export default function Page() {
     return prompts;
   }
 
+  // per mostrare il bottone PIN solo se c'è ?admin=1
+  const isAdminQuery = typeof window !== 'undefined' &&
+    new URLSearchParams(window.location.search).get('admin') === '1';
+
   return (
     <>
       <header className="header">
@@ -309,26 +321,42 @@ export default function Page() {
               >
                 {showOnlyFav ? '⭐ Tutti i prompt' : '⭐ I miei preferiti'}
               </button>
-              <button
-                id="import-docx"
-                className="btn-blue"
-                onClick={() => fileInputRef.current?.click()}
-                aria-label="Importa file Word"
-              >
-                📄 Importa .docx
-              </button>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".docx"
-                style={{ display: 'none' }}
-                aria-label="Seleziona file Word"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) handleDocx(file);
-                  e.currentTarget.value = '';
-                }}
-              />
+
+              {/* Admin: Import .docx con URL + PIN */}
+              {canImport ? (
+                <>
+                  <button
+                    id="import-docx"
+                    className="btn-blue"
+                    onClick={() => fileInputRef.current?.click()}
+                    aria-label="Importa file Word"
+                  >
+                    📄 Importa .docx
+                  </button>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept=".docx"
+                    style={{ display: 'none' }}
+                    aria-label="Seleziona file Word"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) handleDocx(file);
+                      e.currentTarget.value = '';
+                    }}
+                  />
+                </>
+              ) : (
+                isAdminQuery && (
+                  <button
+                    className="btn-blue"
+                    onClick={askForPin}
+                    aria-label="Abilita import (PIN)"
+                  >
+                    🔒 Abilita import
+                  </button>
+                )
+              )}
             </div>
           </div>
 
@@ -424,7 +452,7 @@ export default function Page() {
         </div>
       </main>
 
-      {/* Modale Dettagli Prompt */}
+      {/* Modale Dettagli */}
       {modalOpen && activePrompt && (
         <div
           className="modal-backdrop"
@@ -462,54 +490,10 @@ export default function Page() {
         </div>
       )}
 
-      {/* Modale Disclaimer */}
-      {disclaimerOpen && (
-        <div
-          className="modal-backdrop"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Disclaimer della libreria"
-          onClick={(e) => {
-            if (e.target.classList.contains('modal-backdrop')) setDisclaimerOpen(false);
-          }}
-        >
-          <div className="modal">
-            <div className="modal__header">
-              <h3 className="modal__title">Disclaimer</h3>
-              <button className="modal__close" onClick={() => setDisclaimerOpen(false)} aria-label="Chiudi">✕</button>
-            </div>
-
-            <div className="modal__body" style={{ paddingTop: 12 }}>
-              <p className="modal__desc">
-                Questa libreria di prompt è fornita a scopo informativo e di supporto operativo.
-                I contenuti e gli output generati potrebbero contenere imprecisioni: verifica sempre le informazioni
-                prima di usarle in contesti commerciali o contrattuali.
-              </p>
-              <ul className="modal__desc" style={{ marginTop: 10 }}>
-                <li>Non condividere dati sensibili o riservati.</li>
-                <li>Controlla fonti, numeri e calcoli prima dell’invio al cliente.</li>
-                <li>Se un’informazione non è disponibile, indicarla come “Non reperibile”.</li>
-              </ul>
-              <p className="modal__desc" style={{ marginTop: 10 }}>
-                Proseguendo accetti che l’uso dei contenuti è sotto la tua responsabilità.
-              </p>
-            </div>
-
-            <div className="modal__actions">
-              <button className="btn-blue" onClick={acceptDisclaimer}>Accetto</button>
-              <button className="btn-blue btn-ghost" onClick={() => setDisclaimerOpen(false)}>Chiudi</button>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Footer */}
       <footer className="footer">
-        <div className="container" style={{ display: 'flex', gap: 12, justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap' }}>
-          <p style={{ margin: 0 }}>Realizzato con ❤️ da <strong>Alfredo Palermi</strong></p>
-          <button className="link-btn" onClick={() => setDisclaimerOpen(true)} aria-label="Apri disclaimer">
-            Disclaimer
-          </button>
+        <div className="container">
+          <p>Realizzato con ❤️ da <strong>Alfredo Palermi</strong></p>
         </div>
       </footer>
 
@@ -524,3 +508,4 @@ export default function Page() {
     </>
   );
 }
+

@@ -120,12 +120,13 @@ export default function Page() {
   const [toastMsg, setToastMsg] = useState('');
   const [toastVisible, setToastVisible] = useState(false);
 
-  // stato modale
+  // stato modale prompt
   const [modalOpen, setModalOpen] = useState(false);
   const [activePrompt, setActivePrompt] = useState(null);
 
-  // gating import
-  const [canImport, setCanImport] = useState(false);
+  // stato disclaimer
+  const [disclaimerOpen, setDisclaimerOpen] = useState(false);
+  const [disclaimerAccepted, setDisclaimerAccepted] = useState(false);
 
   const fileInputRef = useRef(null);
 
@@ -136,35 +137,27 @@ export default function Page() {
     } catch {}
   }, []);
 
-  // Abilita import solo con ?admin=1 + PIN valido in sessione
-  useEffect(() => {
-    try {
-      const params = new URLSearchParams(window.location.search);
-      const isAdmin = params.get('admin') === '1';
-      const alreadyOk = sessionStorage.getItem('import_ok') === '1';
-      setCanImport(isAdmin && alreadyOk);
-    } catch {}
-  }, []);
-
-  function askForPin() {
-    try {
-      const pin = prompt('Inserisci PIN per abilitare l’import:');
-      // 👇 PIN "soft" (non sicurezza reale). Cambialo quando vuoi.
-      if (pin === 'ALFREDO2025') {
-        sessionStorage.setItem('import_ok', '1');
-        setCanImport(true);
-      } else if (pin !== null) {
-        alert('PIN errato');
-      }
-    } catch {}
-  }
-
-  // ESC chiude modale
+  // ESC chiude modale prompt
   useEffect(() => {
     const onKey = (e) => { if (e.key === 'Escape') closeDetails(); };
     if (modalOpen) window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [modalOpen]);
+
+  // mostra il disclaimer la prima volta (per sessione)
+  useEffect(() => {
+    try {
+      const ok = sessionStorage.getItem('disclaimerAccepted') === '1';
+      setDisclaimerAccepted(ok);
+      if (!ok) setDisclaimerOpen(true);
+    } catch {}
+  }, []);
+
+  function acceptDisclaimer() {
+    try { sessionStorage.setItem('disclaimerAccepted','1'); } catch {}
+    setDisclaimerAccepted(true);
+    setDisclaimerOpen(false);
+  }
 
   const showToast = (msg) => {
     setToastMsg(msg);
@@ -223,7 +216,7 @@ export default function Page() {
     persistFavorites(next);
   };
 
-  // Modale open/close
+  // Modale prompt open/close
   function openDetails(p) {
     setActivePrompt(p);
     setModalOpen(true);
@@ -302,10 +295,6 @@ export default function Page() {
     return prompts;
   }
 
-  // per mostrare il bottone PIN solo se c'è ?admin=1
-  const isAdminQuery = typeof window !== 'undefined' &&
-    new URLSearchParams(window.location.search).get('admin') === '1';
-
   return (
     <>
       <header className="header">
@@ -318,45 +307,41 @@ export default function Page() {
                 className={`btn-blue ${showOnlyFav ? 'active' : ''}`}
                 onClick={() => setShowOnlyFav(s => !s)}
                 aria-label="Mostra solo preferiti"
+                type="button"
               >
                 {showOnlyFav ? '⭐ Tutti i prompt' : '⭐ I miei preferiti'}
               </button>
 
-              {/* Admin: Import .docx con URL + PIN */}
-              {canImport ? (
-                <>
-                  <button
-                    id="import-docx"
-                    className="btn-blue"
-                    onClick={() => fileInputRef.current?.click()}
-                    aria-label="Importa file Word"
-                  >
-                    📄 Importa .docx
-                  </button>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept=".docx"
-                    style={{ display: 'none' }}
-                    aria-label="Seleziona file Word"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file) handleDocx(file);
-                      e.currentTarget.value = '';
-                    }}
-                  />
-                </>
-              ) : (
-                isAdminQuery && (
-                  <button
-                    className="btn-blue"
-                    onClick={askForPin}
-                    aria-label="Abilita import (PIN)"
-                  >
-                    🔒 Abilita import
-                  </button>
-                )
-              )}
+              <button
+                id="import-docx"
+                className="btn-blue"
+                onClick={() => fileInputRef.current?.click()}
+                aria-label="Importa file Word"
+                type="button"
+              >
+                📄 Importa .docx
+              </button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".docx"
+                style={{ display: 'none' }}
+                aria-label="Seleziona file Word"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) handleDocx(file);
+                  e.currentTarget.value = '';
+                }}
+              />
+
+              <button
+                className="btn-blue"
+                onClick={() => setDisclaimerOpen(true)}
+                aria-label="Apri disclaimer"
+                type="button"
+              >
+                🛈 Disclaimer
+              </button>
             </div>
           </div>
 
@@ -419,6 +404,7 @@ export default function Page() {
                     className="link-btn details-btn"
                     onClick={() => openDetails(p)}
                     aria-label={`Apri dettagli del prompt ${p.title}`}
+                    type="button"
                   >
                     Dettagli ⤵︎
                   </button>
@@ -429,6 +415,7 @@ export default function Page() {
                     className="btn-blue"
                     onClick={() => copyPrompt(p.id)}
                     aria-label="Copia prompt"
+                    type="button"
                   >
                     📋 Copia
                   </button>
@@ -436,6 +423,7 @@ export default function Page() {
                     className={`btn-blue favorite-btn ${favorites.has(p.id) ? 'active' : ''}`}
                     onClick={() => toggleFavorite(p.id)}
                     aria-label={favorites.has(p.id) ? 'Rimuovi dai preferiti' : 'Aggiungi ai preferiti'}
+                    type="button"
                   >
                     {favorites.has(p.id) ? '⭐' : '☆'}
                   </button>
@@ -452,7 +440,7 @@ export default function Page() {
         </div>
       </main>
 
-      {/* Modale Dettagli */}
+      {/* Modale Dettagli Prompt */}
       {modalOpen && activePrompt && (
         <div
           className="modal-backdrop"
@@ -466,7 +454,7 @@ export default function Page() {
           <div className="modal">
             <div className="modal__header">
               <h3 className="modal__title">{activePrompt.title}</h3>
-              <button className="modal__close" onClick={closeDetails} aria-label="Chiudi">✕</button>
+              <button className="modal__close" onClick={closeDetails} aria-label="Chiudi" type="button">✕</button>
             </div>
 
             <div className="modal__category">{activePrompt.category}</div>
@@ -477,14 +465,54 @@ export default function Page() {
             </div>
 
             <div className="modal__actions">
-              <button className="btn-blue" onClick={() => copyPrompt(activePrompt.id)}>📋 Copia prompt</button>
+              <button className="btn-blue" onClick={() => copyPrompt(activePrompt.id)} type="button">📋 Copia prompt</button>
               <button
                 className={`btn-blue favorite-btn ${favorites.has(activePrompt.id) ? 'active' : ''}`}
                 onClick={() => toggleFavorite(activePrompt.id)}
+                type="button"
               >
                 {favorites.has(activePrompt.id) ? '⭐ Rimuovi dai preferiti' : '☆ Aggiungi ai preferiti'}
               </button>
-              <button className="btn-blue btn-ghost" onClick={closeDetails}>Chiudi</button>
+              <button className="btn-blue btn-ghost" onClick={closeDetails} type="button">Chiudi</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modale Disclaimer */}
+      {disclaimerOpen && (
+        <div
+          className="modal-backdrop"
+          onClick={(e) => {
+            if (e.target.classList.contains('modal-backdrop')) setDisclaimerOpen(false);
+          }}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Disclaimer"
+        >
+          <div className="modal">
+            <div className="modal__header">
+              <h3 className="modal__title">Disclaimer</h3>
+              <button className="modal__close" onClick={() => setDisclaimerOpen(false)} aria-label="Chiudi" type="button">✕</button>
+            </div>
+
+            <div className="modal__body" style={{paddingTop: 16}}>
+              <p className="modal__desc" style={{marginBottom: 12}}>
+                I contenuti di questa libreria sono forniti “as is”. Possono contenere errori o imprecisioni.
+                Verifica sempre i risultati, mantieni la conformità normativa e rispetta le policy delle piattaforme.
+              </p>
+              <ul style={{padding: '0 20px 10px 40px', margin: 0}}>
+                <li>Fonti e dati vanno controllati prima dell’uso commerciale.</li>
+                <li>Nessuna responsabilità per decisioni prese sulla base degli output.</li>
+                <li>Non inserire informazioni sensibili o dati personali non necessari.</li>
+              </ul>
+            </div>
+
+            <div className="modal__actions">
+              <button className="btn-blue btn-ghost" onClick={() => setDisclaimerOpen(false)} type="button">Chiudi</button>
+              {!disclaimerAccepted && (
+                <button className="btn-blue" onClick={acceptDisclaimer} type="button">Ho capito</button>
+              )}
             </div>
           </div>
         </div>
@@ -494,6 +522,9 @@ export default function Page() {
       <footer className="footer">
         <div className="container">
           <p>Realizzato con ❤️ da <strong>Alfredo Palermi</strong></p>
+          <p style={{fontSize:'12px', color:'#888', marginTop:'6px'}}>
+            I prompt forniscono indicazioni operative. Verifica sempre i risultati e le fonti prima dell’uso professionale.
+          </p>
         </div>
       </footer>
 
@@ -508,4 +539,3 @@ export default function Page() {
     </>
   );
 }
-

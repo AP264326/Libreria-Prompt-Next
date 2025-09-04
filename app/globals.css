@@ -476,3 +476,29 @@ mark { background: #fde68a; color: #111; padding: 0 2px; border-radius: 3px; }
 .footer strong {
   color: var(--color-text); /* il nome un po' più in evidenza */
 }
+/* —— Footer Disclaimer (arancione + più spessore) —— */
+.footer .link-btn.disclaimer {
+  color: #f59e0b;           /* arancione */
+  font-weight: 600;         /* più spesso */
+  letter-spacing: 0.01em;
+}
+
+.footer .link-btn.disclaimer:hover {
+  color: #d97706;           /* arancione più scuro on hover */
+  text-decoration: underline;
+}
+
+.footer .link-btn.disclaimer:focus {
+  outline: 2px solid rgba(245, 158, 11, 0.35);
+  outline-offset: 2px;
+}
+
+/* opzionale: leggera variante in dark mode */
+@media (prefers-color-scheme: dark) {
+  .footer .link-btn.disclaimer {
+    color: #fbbf24;         /* arancione più chiaro su sfondo scuro */
+  }
+  .footer .link-btn.disclaimer:hover {
+    color: #f59e0b;
+  }
+}

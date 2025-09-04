@@ -3,9 +3,8 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-/* ===================== DATI ===================== */
-const PROMPTS_DATA = [
-  // === I TUOI PROMPT (invariati) ===
+/* ===================== DATI DI DEFAULT ===================== */
+const DEFAULT_PROMPTS = [
   {
     id: 's1',
     title: 'Scouting – Elenco aziende B2B',
@@ -112,8 +111,9 @@ const PROMPTS_DATA = [
   }
 ];
 
-// Copia di default per il ripristino (deep copy semplice)
-const DEFAULT_PROMPTS = JSON.parse(JSON.stringify(PROMPTS_DATA));
+/* ===================== COSTANTI STORAGE ===================== */
+const LS_PROMPTS_KEY = 'promptsStore:v1';      // dove salvo i prompt importati
+const DISCLAIMER_KEY = 'disclaimerAccepted:v1';// per “prima visita” disclaimer
 
 /* ===================== HELPERS ===================== */
 function escapeHtml(text = '') {
@@ -138,6 +138,10 @@ function highlight(text = '', query = '') {
 
 /* ===================== COMPONENT ===================== */
 export default function Page() {
+  // Stato principale: i prompt visualizzati (default oppure importati da localStorage)
+  const [prompts, setPrompts] = useState(DEFAULT_PROMPTS);
+
+  // UI state
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('');
   const [favorites, setFavorites] = useState(new Set());
@@ -149,31 +153,40 @@ export default function Page() {
   const [modalOpen, setModalOpen] = useState(false);
   const [activePrompt, setActivePrompt] = useState(null);
 
-  // Admin & import/reset
+  // Admin & import
   const [isAdmin, setIsAdmin] = useState(false);
   const [adminModalOpen, setAdminModalOpen] = useState(false);
   const [adminPass, setAdminPass] = useState('');
   const [adminError, setAdminError] = useState('');
 
   // Disclaimer
-  const DISCLAIMER_KEY = 'disclaimerAccepted:v1';
   const [disclaimerOpen, setDisclaimerOpen] = useState(false);
 
   const fileInputRef = useRef(null);
 
-  // preferiti
+  /* ===== Bootstrap: carico preferiti e prompts dal browser ===== */
   useEffect(() => {
     try {
-      const saved = sessionStorage.getItem('promptFavorites');
-      if (saved) setFavorites(new Set(JSON.parse(saved)));
+      // preferiti (sessione)
+      const savedFavs = sessionStorage.getItem('promptFavorites');
+      if (savedFavs) setFavorites(new Set(JSON.parse(savedFavs)));
+      // prompts (persistenti, personali)
+      const savedPrompts = localStorage.getItem(LS_PROMPTS_KEY);
+      if (savedPrompts) {
+        const parsed = JSON.parse(savedPrompts);
+        if (Array.isArray(parsed) && parsed.length > 0) setPrompts(parsed);
+      }
+      // admin persistito
+      const a = sessionStorage.getItem('isAdmin') === '1';
+      setIsAdmin(a);
     } catch {}
   }, []);
 
-  // admin persistito in sessione
+  // Auto-apri disclaimer alla prima visita
   useEffect(() => {
     try {
-      const a = sessionStorage.getItem('isAdmin') === '1';
-      setIsAdmin(a);
+      const accepted = localStorage.getItem(DISCLAIMER_KEY) === '1';
+      if (!accepted) setDisclaimerOpen(true);
     } catch {}
   }, []);
 
@@ -190,6 +203,7 @@ export default function Page() {
     return () => window.removeEventListener('keydown', onKey);
   }, [modalOpen, adminModalOpen, disclaimerOpen]);
 
+  /* ===== Utils ===== */
   const showToast = (msg) => {
     setToastMsg(msg);
     setToastVisible(true);
@@ -203,9 +217,10 @@ export default function Page() {
     } catch {}
   };
 
+  /* ===== Filtri grid ===== */
   const filtered = useMemo(() => {
     const term = search.toLowerCase().trim();
-    return PROMPTS_DATA.filter((p) => {
+    return prompts.filter((p) => {
       const matchesSearch =
         !term ||
         p.title.toLowerCase().includes(term) ||
@@ -215,10 +230,11 @@ export default function Page() {
       const matchesFav = !showOnlyFav || favorites.has(p.id);
       return matchesSearch && matchesCategory && matchesFav;
     });
-  }, [search, category, showOnlyFav, favorites]);
+  }, [prompts, search, category, showOnlyFav, favorites]);
 
+  /* ===== Azioni card ===== */
   const copyPrompt = async (id) => {
-    const p = PROMPTS_DATA.find((x) => x.id === id);
+    const p = prompts.find((x) => x.id === id);
     if (!p) return;
     try {
       await navigator.clipboard.writeText(p.text);
@@ -259,13 +275,9 @@ export default function Page() {
     try { document.body.style.overflow = ''; } catch {}
   }
 
-  // Import .docx con Mammoth (browser) — SOLO ADMIN
+  /* ===== Import .docx (solo Admin) ===== */
   const handleDocx = async (file) => {
     try {
-      if (!isAdmin) {
-        showToast('Solo admin può importare.');
-        return;
-      }
       showToast('Caricamento file in corso...');
       const arrayBuffer = await file.arrayBuffer();
       const result = await window.mammoth.extractRawText({ arrayBuffer });
@@ -274,53 +286,54 @@ export default function Page() {
         showToast('Nessun prompt valido trovato nel file.');
         return;
       }
-
-      // 1) Backup della libreria attuale (per reset)
+      // sostituisco l’elenco con quelli importati
+      setPrompts(newPrompts);
       try {
-        localStorage.setItem('promptLibraryBackup', JSON.stringify(PROMPTS_DATA));
+        localStorage.setItem(LS_PROMPTS_KEY, JSON.stringify(newPrompts));
       } catch {}
-
-      // 2) Rimpiazza i prompt correnti
-      PROMPTS_DATA.length = 0;
-      newPrompts.forEach((np) => PROMPTS_DATA.push(np));
-
-      // 3) Reset UI
+      // reset UI secondari
       persistFavorites(new Set());
       setShowOnlyFav(false);
       setSearch('');
       setCategory('');
-      showToast(`${newPrompts.length} prompt caricati dal file!`);
+      showToast(`${newPrompts.length} prompt caricati (salvati localmente)!`);
     } catch (e) {
       console.error(e);
       showToast('Errore durante il caricamento del file.');
     }
   };
 
-  // Parser .docx semplice
+  // Parser .docx -> lista prompt
   function parseDocxContent(text) {
-    const prompts = [];
+    const promptsOut = [];
     const lines = text.split('\n').map((l) => l.trim()).filter(Boolean);
     let current = null;
     let buf = [];
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
-      if (line.length < 100 && !line.includes('\t') && !line.startsWith('-') && !line.startsWith('•')) {
+      const looksLikeTitle = line.length < 120 && !line.includes('\t') && !line.startsWith('-') && !line.startsWith('•');
+      if (looksLikeTitle) {
+        // chiudo precedente
         if (current && current.title) {
           current.text = buf.join('\n').trim();
-          if (current.text && current.category) prompts.push(current);
+          if (current.text && current.category) promptsOut.push(current);
         }
+        // nuovo
         current = {
-          id: `imported_${Date.now()}_${prompts.length}`,
+          id: `imported_${Date.now()}_${promptsOut.length}`,
           title: line,
           category: '',
           description: '',
           text: ''
         };
         buf = [];
+        // prova a prendere la riga successiva come categoria se breve e senza punteggiatura forte
         for (let j = i + 1; j < Math.min(i + 3, lines.length); j++) {
           const nl = lines[j];
           if (nl.length < 50 && !nl.includes('.') && !nl.includes(':')) {
-            current.category = nl; i = j; break;
+            current.category = nl;
+            i = j;
+            break;
           }
         }
         if (!current.category) current.category = 'Importato';
@@ -333,9 +346,9 @@ export default function Page() {
     }
     if (current && current.title) {
       current.text = buf.join('\n').trim();
-      if (current.text && current.category) prompts.push(current);
+      if (current.text && current.category) promptsOut.push(current);
     }
-    return prompts;
+    return promptsOut;
   }
 
   /* ===== Admin auth ===== */
@@ -355,37 +368,22 @@ export default function Page() {
     }
   }
 
-  /* ===== Reset Libreria (SOLO ADMIN) ===== */
+  /* ===== Reset Libreria (solo Admin) ===== */
   function resetLibrary() {
-    if (!isAdmin) {
-      openAdmin();
-      return;
-    }
-    const ok = window.confirm('Ripristinare la libreria? Verranno sovrascritti i prompt correnti.');
+    if (!isAdmin) return;
+    const ok = window.confirm(
+      'Ripristinare la libreria ai prompt di default? I prompt importati localmente verranno rimossi.'
+    );
     if (!ok) return;
-
-    // 1) prova a usare il backup dell’ultimo import
-    let restored = null;
-    try {
-      const raw = localStorage.getItem('promptLibraryBackup');
-      if (raw) restored = JSON.parse(raw);
-    } catch {}
-
-    // 2) se non c’è backup, usa i prompt di default inclusi nel codice
-    const source = restored && Array.isArray(restored) && restored.length > 0
-      ? restored
-      : DEFAULT_PROMPTS;
-
-    // 3) ripristina
-    PROMPTS_DATA.length = 0;
-    source.forEach(p => PROMPTS_DATA.push({ ...p }));
-
-    // 4) reset UI
+    // ripristino
+    setPrompts(DEFAULT_PROMPTS);
+    try { localStorage.removeItem(LS_PROMPTS_KEY); } catch {}
+    // opzionale: pulisco anche preferiti
     persistFavorites(new Set());
     setShowOnlyFav(false);
     setSearch('');
     setCategory('');
-    showToast('Libreria ripristinata');
+    showToast('Libreria ripristinata ai prompt di default.');
   }
 
   /* ===== Disclaimer ===== */
@@ -423,6 +421,7 @@ export default function Page() {
                     className="btn-blue"
                     onClick={() => fileInputRef.current?.click()}
                     aria-label="Importa file Word"
+                    title="Importa .docx (sostituisce la libreria locale)"
                   >
                     📄 Importa .docx
                   </button>
@@ -441,8 +440,8 @@ export default function Page() {
                   <button
                     className="btn-blue"
                     onClick={resetLibrary}
-                    aria-label="Ripristina libreria"
-                    title="Ripristina libreria"
+                    aria-label="Reset libreria"
+                    title="Ripristina i prompt di default"
                   >
                     ♻️ Reset libreria
                   </button>
@@ -676,19 +675,19 @@ export default function Page() {
         </div>
       )}
 
-      {/* Footer con link Disclaimer */}
+      {/* Footer con link Disclaimer (arancione + semi-bold) */}
       <footer className="footer">
         <div className="container" style={{ display: 'flex', justifyContent: 'center', gap: 12, alignItems: 'center' }}>
           <p style={{ margin: 0 }}>Realizzato con ❤️ da <strong>Alfredo Palermi</strong></p>
           <span aria-hidden="true">•</span>
           <button
-  className="link-btn disclaimer"   // 👈 aggiunta la classe "disclaimer"
-  onClick={openDisclaimer}
-  aria-label="Apri disclaimer"
-  style={{ fontSize: 14 }}
->
-  ⚠️ Disclaimer
-</button>
+            className="link-btn"
+            onClick={openDisclaimer}
+            aria-label="Apri disclaimer"
+            style={{ fontSize: 14, color: '#f59e0b', fontWeight: 600 }} // arancione + semibold
+          >
+            ⚠️ Disclaimer
+          </button>
         </div>
       </footer>
 

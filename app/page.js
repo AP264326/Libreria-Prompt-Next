@@ -682,13 +682,13 @@ export default function Page() {
           <p style={{ margin: 0 }}>Realizzato con ❤️ da <strong>Alfredo Palermi</strong></p>
           <span aria-hidden="true">•</span>
           <button
-            className="link-btn"
-            onClick={openDisclaimer}
-            aria-label="Apri disclaimer"
-            style={{ fontSize: 14 }}
-          >
-            ⚠️ Disclaimer
-          </button>
+  className="link-btn disclaimer"   // 👈 aggiunta la classe "disclaimer"
+  onClick={openDisclaimer}
+  aria-label="Apri disclaimer"
+  style={{ fontSize: 14 }}
+>
+  ⚠️ Disclaimer
+</button>
         </div>
       </footer>
 

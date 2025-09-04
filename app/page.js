@@ -112,6 +112,9 @@ const PROMPTS_DATA = [
   }
 ];
 
+// Copia di default per il ripristino (deep copy semplice)
+const DEFAULT_PROMPTS = JSON.parse(JSON.stringify(PROMPTS_DATA));
+
 /* ===================== HELPERS ===================== */
 function escapeHtml(text = '') {
   return String(text).replace(/[&<>"']/g, (ch) =>
@@ -146,7 +149,7 @@ export default function Page() {
   const [modalOpen, setModalOpen] = useState(false);
   const [activePrompt, setActivePrompt] = useState(null);
 
-  // Admin & import
+  // Admin & import/reset
   const [isAdmin, setIsAdmin] = useState(false);
   const [adminModalOpen, setAdminModalOpen] = useState(false);
   const [adminPass, setAdminPass] = useState('');
@@ -256,9 +259,13 @@ export default function Page() {
     try { document.body.style.overflow = ''; } catch {}
   }
 
-  // Import .docx con Mammoth (browser)
+  // Import .docx con Mammoth (browser) — SOLO ADMIN
   const handleDocx = async (file) => {
     try {
+      if (!isAdmin) {
+        showToast('Solo admin può importare.');
+        return;
+      }
       showToast('Caricamento file in corso...');
       const arrayBuffer = await file.arrayBuffer();
       const result = await window.mammoth.extractRawText({ arrayBuffer });
@@ -267,8 +274,17 @@ export default function Page() {
         showToast('Nessun prompt valido trovato nel file.');
         return;
       }
+
+      // 1) Backup della libreria attuale (per reset)
+      try {
+        localStorage.setItem('promptLibraryBackup', JSON.stringify(PROMPTS_DATA));
+      } catch {}
+
+      // 2) Rimpiazza i prompt correnti
       PROMPTS_DATA.length = 0;
       newPrompts.forEach((np) => PROMPTS_DATA.push(np));
+
+      // 3) Reset UI
       persistFavorites(new Set());
       setShowOnlyFav(false);
       setSearch('');
@@ -280,6 +296,7 @@ export default function Page() {
     }
   };
 
+  // Parser .docx semplice
   function parseDocxContent(text) {
     const prompts = [];
     const lines = text.split('\n').map((l) => l.trim()).filter(Boolean);
@@ -338,6 +355,39 @@ export default function Page() {
     }
   }
 
+  /* ===== Reset Libreria (SOLO ADMIN) ===== */
+  function resetLibrary() {
+    if (!isAdmin) {
+      openAdmin();
+      return;
+    }
+    const ok = window.confirm('Ripristinare la libreria? Verranno sovrascritti i prompt correnti.');
+    if (!ok) return;
+
+    // 1) prova a usare il backup dell’ultimo import
+    let restored = null;
+    try {
+      const raw = localStorage.getItem('promptLibraryBackup');
+      if (raw) restored = JSON.parse(raw);
+    } catch {}
+
+    // 2) se non c’è backup, usa i prompt di default inclusi nel codice
+    const source = restored && Array.isArray(restored) && restored.length > 0
+      ? restored
+      : DEFAULT_PROMPTS;
+
+    // 3) ripristina
+    PROMPTS_DATA.length = 0;
+    source.forEach(p => PROMPTS_DATA.push({ ...p }));
+
+    // 4) reset UI
+    persistFavorites(new Set());
+    setShowOnlyFav(false);
+    setSearch('');
+    setCategory('');
+    showToast('Libreria ripristinata');
+  }
+
   /* ===== Disclaimer ===== */
   function openDisclaimer() {
     setDisclaimerOpen(true);
@@ -365,7 +415,7 @@ export default function Page() {
                 {showOnlyFav ? '⭐ Tutti i prompt' : '⭐ I miei preferiti'}
               </button>
 
-              {/* Admin / Import */}
+              {/* Admin / Import / Reset */}
               {isAdmin ? (
                 <>
                   <button
@@ -388,6 +438,14 @@ export default function Page() {
                       e.currentTarget.value = '';
                     }}
                   />
+                  <button
+                    className="btn-blue"
+                    onClick={resetLibrary}
+                    aria-label="Ripristina libreria"
+                    title="Ripristina libreria"
+                  >
+                    ♻️ Reset libreria
+                  </button>
                 </>
               ) : (
                 <button
@@ -618,21 +676,16 @@ export default function Page() {
         </div>
       )}
 
-      {/* Footer con link Disclaimer (più evidente) */}
+      {/* Footer con link Disclaimer */}
       <footer className="footer">
-        <div
-          className="container"
-          style={{ display: 'flex', justifyContent: 'center', gap: 12, alignItems: 'center' }}
-        >
-          <p style={{ margin: 0 }}>
-            Realizzato con ❤️ da <strong>Alfredo Palermi</strong>
-          </p>
+        <div className="container" style={{ display: 'flex', justifyContent: 'center', gap: 12, alignItems: 'center' }}>
+          <p style={{ margin: 0 }}>Realizzato con ❤️ da <strong>Alfredo Palermi</strong></p>
           <span aria-hidden="true">•</span>
           <button
             className="link-btn"
             onClick={openDisclaimer}
             aria-label="Apri disclaimer"
-            style={{ fontSize: 14, fontWeight: 600, color: '#d97706' }} // <-- evidenziato
+            style={{ fontSize: 14 }}
           >
             ⚠️ Disclaimer
           </button>

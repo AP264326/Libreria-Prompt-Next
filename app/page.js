@@ -629,7 +629,7 @@ export default function Page() {
             aria-label="Apri disclaimer"
             style={{ fontSize: 14 }}
           >
-            Disclaimer
+            ⚠️ Disclaimer
           </button>
         </div>
       </footer>

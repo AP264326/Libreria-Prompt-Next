@@ -618,16 +618,21 @@ export default function Page() {
         </div>
       )}
 
-      {/* Footer con link Disclaimer */}
+      {/* Footer con link Disclaimer (più evidente) */}
       <footer className="footer">
-        <div className="container" style={{ display: 'flex', justifyContent: 'center', gap: 12, alignItems: 'center' }}>
-          <p style={{ margin: 0 }}>Realizzato con ❤️ da <strong>Alfredo Palermi</strong></p>
+        <div
+          className="container"
+          style={{ display: 'flex', justifyContent: 'center', gap: 12, alignItems: 'center' }}
+        >
+          <p style={{ margin: 0 }}>
+            Realizzato con ❤️ da <strong>Alfredo Palermi</strong>
+          </p>
           <span aria-hidden="true">•</span>
           <button
             className="link-btn"
             onClick={openDisclaimer}
             aria-label="Apri disclaimer"
-            style={{ fontSize: 14 }}
+            style={{ fontSize: 14, fontWeight: 600, color: '#d97706' }} // <-- evidenziato
           >
             ⚠️ Disclaimer
           </button>

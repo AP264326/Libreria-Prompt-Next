@@ -10,9 +10,36 @@ const DEFAULT_PROMPTS = [
     title: 'Scouting – Elenco aziende B2B',
     category: 'Scouting',
     description:
-      'Genera un elenco dettagliato di aziende B2B nel settore scelto e nella provincia indicata, con filtri su dipendenti e output in Excel.',
-    text:
-      "Genera un elenco dettagliato di aziende B2B nel settore [settore/categoria] situate nella provincia di [nome provincia] con un consumo energetico annuo superiore a [kWh]. Per ogni azienda, includi le seguenti informazioni:\n• Nome azienda\n• Settore specifico\n• Numero di dipendenti \n• Indirizzo completo\n• Sito web\n• Indirizzo e-mail\n• Numero di telefono\n• Ruolo delle persone chiave (es. responsabile vendite, marketing, acquisti)\n• Profili LinkedIn delle persone chiave (CEO o Energy Manager)\n• Valutazione del potenziale interesse per soluzioni di risparmio energetico\nRequisiti:\n1. Filtro: aziende con almeno [n. dipendenti], localizzate nella provincia di [nome provincia].\n2. Presenta i risultati in formato tabellare, con una colonna per ogni campo richiesto.\n3. Al termine, crea un file Excel contenente tutti i dati raccolti e fornisci un link per scaricarlo."
+      'Genera un elenco dettagliato di aziende B2B filtrate per settore, provincia e dimensioni. Output tabellare + CSV, risultati in blocchi da 5.',
+    text: `Agisci come un Business Data Researcher specializzato in lead generation.
+Il tuo compito è raccogliere il maggior numero possibile di aziende secondo i criteri che ti fornirò.
+
+Prima di procedere, chiedimi di specificare:
+- Settore/categoria delle aziende
+- Provincia
+- Consumo energetico annuo minimo (kWh)
+- Numero minimo di dipendenti
+
+Dopo che avrò fornito queste informazioni, genera un elenco dettagliato di aziende B2B che rispettano i criteri.
+
+Per ogni azienda includi:
+- Nome azienda
+- Settore specifico
+- Numero di dipendenti
+- Indirizzo completo
+- Sito web
+- Indirizzo e-mail
+- Numero di telefono
+- Ruolo delle persone chiave (es. responsabile vendite, marketing, acquisti)
+- Profili LinkedIn delle persone chiave (CEO o Energy Manager)
+- Valutazione del potenziale interesse per soluzioni di efficientamento energetico
+
+Requisiti di output
+- Presenta i risultati in formato tabellare (colonne per ogni campo).
+- Se trovi più di 5 aziende, suddividi i risultati in blocchi da massimo 5 aziende ciascuno finché non hai mostrato tutte le aziende (non fermarti al primo gruppo).
+- Se alcuni dati (es. ruoli, LinkedIn, email) non sono disponibili, lascia la cella vuota ma non limitare il numero di aziende.
+- Al termine, genera la stessa lista in formato CSV puro (racchiuso tra \`\`\`), in modo che io possa copiarlo e salvarlo come file .csv apribile in Excel.
+- Non fornire link fittizi: se non puoi creare un file .xlsx scaricabile, limita l’output al formato CSV testuale.`
   },
   {
     id: 'p1',
@@ -81,7 +108,7 @@ const DEFAULT_PROMPTS = [
     category: 'Preventivatore Simulatore FV',
     description: 'Calcola pre-preventivo fotovoltaico con scenari e ROI.',
     text:
-      'Genera un pre-preventivo fotovoltaico per [azienda B2B]. L\'utente fornirà: consumi annui per fasce, superficie, località, tipologia pannello, costi unitari, ecc. Il sistema deve calcolare costi, produzione, autoconsumo, risparmio, ROI, incentivi 2025, grafico scenari (base, accumulo, accumulo+colonnina), numero pannelli, report PDF scaricabile, salvataggio dati.'
+      "Genera un pre-preventivo fotovoltaico per [azienda B2B]. L'utente fornirà: consumi annui per fasce, superficie, località, tipologia pannello, costi unitari, ecc. Il sistema deve calcolare costi, produzione, autoconsumo, risparmio, ROI, incentivi 2025, grafico scenari (base, accumulo, accumulo+colonnina), numero pannelli, report PDF scaricabile, salvataggio dati."
   },
   {
     id: 'lc1',

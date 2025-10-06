@@ -90,13 +90,14 @@ const DEFAULT_PROMPTS = [
       'Genera un pre-preventivo fotovoltaico per [azienda B2B]. L\'utente fornirà: consumi annui per fasce, superficie, località, tipologia pannello, costi unitari, ecc. Il sistema deve calcolare costi, produzione, autoconsumo, risparmio, ROI, incentivi 2025, grafico scenari (base, accumulo, accumulo+colonnina), numero pannelli, report PDF scaricabile, salvataggio dati.'
   },
   {
-    id: 'lc1',
-    title: 'Lettura Consumi Next – Analisi fasce',
-    category: 'Lettura Consumi Next',
-    description: 'Calcola consumi annui per fasce orarie e genera grafico.',
-    text:
-      '1. Calcola il consumo annuo per ciascuna delle tre fasce orarie (F1, F2, F3) e il consumo totale annuo, espressi in MWh, utilizzando le letture di Next che ti fornisco in allegato.\n2. Crea una tabella Excel scaricabile con colonne: Consumo fascia F1, Consumo fascia F2, Consumo fascia F3, Consumo totale annuo.\n3. Genera un grafico a linee dei consumi mensili in kWh suddivisi per fascia oraria e totale e fornisci analisi dettagliata.'
-  },
+  id: 'lc1',
+  title: 'Lettura Consumi Next – Analisi fasce',
+  category: 'Lettura Consumi Next',
+  description:
+    'Estrai e analizza i consumi mensili distinguendo letture progressive vs consumi reali. Tabella + grafici.',
+  text:
+    "🔹 Analisi Consumi/Letture Next \n\n🎯 Obiettivo\nEstrarre e analizzare i consumi elettrici mensili da file Excel, distinguendo automaticamente tra letture progressive e consumi reali. Restituire tabella riepilogativa + grafici.\n\n📥 Input richiesto\n• File Excel con colonne:\n\nPeriodo (colonna A)\n\nConsumo F1 (kWh) (colonna F)\n\nConsumo F2 (kWh) (colonna G)\n\nConsumo F3 (kWh) (colonna H)\n\nPotenza massima (kW) (colonna AJ)\n\n🧠 Attività da svolgere\n\nPre-processing\n\nConverti eventuali valori testo → numerici.\n\nIgnora righe vuote o con valori anomali.\n\nSe tutti i valori F1/F2/F3 = 0 → escludi il mese.\n\nDistinzione Consumi vs Letture\n\nSe i valori mensili crescono in modo costante senza oscillazioni → considera letture progressive → calcola il consumo del mese = differenza tra mese corrente e precedente.\n\nSe i valori oscillano (in aumento o diminuzione) → considera consumi reali → usa i valori così come sono.\n\nCalcoli richiesti\n\nConsumo mensile per fascia (F1, F2, F3).\n\nConsumo totale mensile = F1+F2+F3.\n\nPotenza massima mensile (riportata dalla colonna AJ).\n\nRiepilogo annuo:\n• Totale F1, F2, F3 e totale complessivo (in kWh e in MWh).\n• % di ciascuna fascia sul totale.\n• Potenza massima annua = valore massimo fra i mesi.\n\n📤 Output atteso\n\nTabella riepilogativa mensile con colonne:\nPeriodo | F1 (kWh) | F2 (kWh) | F3 (kWh) | Totale mensile (kWh) | Potenza max (kW)\n\nuna riga finale di riepilogo con Totale annuo (MWh) e % per fascia.\n\nGrafico:\n\nA linee o barre con consumi mensili suddivisi per fascia + totale.\n\nSintesi testuale chiara:\n\nConsumi annui totali (MWh).\n\nRipartizione % F1, F2, F3.\n\nPotenza massima riscontrata.\n\nEvidenzia se i dati erano letture progressive o consumi reali.\n\n⚠️ Guardrail\n\nNon generare codice o script.\n\nSe un dato non è disponibile, scrivi “Non reperito / Da verificare”.\n\n🔚 Chiusura\n✅ Output completato – analisi terminata."
+},
   {
     id: 'nf1',
     title: 'Negoziazione – Follow-up cliente',

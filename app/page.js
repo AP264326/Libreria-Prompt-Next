@@ -12,8 +12,7 @@ const DEFAULT_PROMPTS = [
     description:
       'Genera un elenco dettagliato di aziende B2B nel settore scelto e nella provincia indicata, con filtri su dipendenti e output in Excel.',
     text:
-      "Agisci come un Business Data Researcher specializzato in lead generation.\nIl tuo compito è raccogliere il maggior numero possibile di aziende secondo i criteri che ti fornirò.\n\nPrima di procedere, chiedimi di specificare:\n\nSettore/categoria delle aziende\n\nProvincia\n\nConsumo energetico annuo minimo (kWh)\n\nNumero minimo di dipendenti\n\nDopo che avrò fornito queste informazioni, genera un elenco dettagliato di aziende B2B che rispettano i criteri.\n\nPer ogni azienda includi:\n\nNome azienda\n\nSettore specifico\n\nNumero di dipendenti\n\nIndirizzo completo\n\nSito web\n\nIndirizzo e-mail\n\nNumero di telefono\n\nRuolo delle persone chiave (es. responsabile vendite, marketing, acquisti)\n\nProfili LinkedIn delle persone chiave (CEO o Energy Manager)\n\nValutazione del potenziale interesse per soluzioni di risparmio energetico\n\nRequisiti di output\n\nPresenta i risultati in formato tabellare (colonne per ogni campo).\n\nSe trovi più di 5 aziende, suddividi i risultati in blocchi da massimo 5 aziende ciascuno finché non hai mostrato tutte le aziende (non fermarti al primo gruppo).\n\nSe alcuni dati (es. ruoli, LinkedIn, email) non sono disponibili, lascia la cella vuota ma non limitare il numero di aziende.\n\nAl termine, genera la stessa lista in formato CSV puro (racchiuso tra ```), in modo che io possa copiarlo e salvarlo come file .csv apribile in Excel.\n\nNon fornire link fittizi: se non puoi creare un file .xlsx scaricabile, limita l’output al formato CSV testuale.",
-    tags: ['Perplexity']
+      "Genera un elenco dettagliato di aziende B2B nel settore [settore/categoria] situate nella provincia di [nome provincia] con un consumo energetico annuo superiore a [kWh]. Per ogni azienda, includi le seguenti informazioni:\n• Nome azienda\n• Settore specifico\n• Numero di dipendenti \n• Indirizzo completo\n• Sito web\n• Indirizzo e-mail\n• Numero di telefono\n• Ruolo delle persone chiave (es. responsabile vendite, marketing, acquisti)\n• Profili LinkedIn delle persone chiave (CEO o Energy Manager)\n• Valutazione del potenziale interesse per soluzioni di risparmio energetico\nRequisiti:\n1. Filtro: aziende con almeno [n. dipendenti], localizzate nella provincia di [nome provincia].\n2. Presenta i risultati in formato tabellare, con una colonna per ogni campo richiesto.\n3. Al termine, crea un file Excel contenente tutti i dati raccolti e fornisci un link per scaricarlo."
   },
   {
     id: 'p1',
@@ -22,8 +21,7 @@ const DEFAULT_PROMPTS = [
     description:
       "Analizza un'azienda target e redigi un identikit energetico completo con opportunità commerciali.",
     text:
-      "Analizza l'azienda [NOME AZIENDA] e crea un identikit approfondito orientato alla consulenza energetica. Raccogli e sintetizza le seguenti informazioni (se disponibili da fonti pubbliche):\n🔹 Profilo generale dell'azienda\n– Ragione sociale, anno di fondazione, struttura societaria\n– Storia e sviluppo aziendale\n– Settore merceologico / categoria ATECO\n– Sedi operative, stabilimenti e presenza territoriale\n🔹 Dimensioni e struttura economica\n– Numero dipendenti\n– Fatturato annuo e trend economico (ultimi 3 anni)\n– Presenza di stabilimenti energivori o grandi superfici\n🔹 Consumo e fabbisogno energetico potenziale\n– Indizi sulla potenza impegnata / consumi elettrici stimati\n– Tipologia di utenze: produttive, logistiche, direzionali, commerciali\n– Presenza di turnazioni h24 o lavorazioni energivore\n🔹 Stato attuale dell'approvvigionamento energetico\n– Indizi su contratti luce/gas\n– Presenza di sistemi di monitoraggio energetico\n– Presenza di impianti di autoproduzione (es. fotovoltaico, cogenerazione)\n– Presenza di colonnine EV o politiche ESG\n🔹 Altri elementi strategici o opportunità commerciali\n– Eventuali criticità energetiche o opportunità di ottimizzazione\n– Progetti recenti di efficienza energetica, sostenibilità o digitalizzazione\n– Collaborazioni con ESCo o consulenti energetici\nFornisci il profilo sotto forma di scheda strutturata (tipo report operativo per consulente). Evidenzia opportunità di intervento commerciale, criticità e punti di forza. Se i dati non sono disponibili, segnala l'informazione come non reperita.",
-    tags: ['Perplexity']
+      "Analizza l'azienda [NOME AZIENDA] e crea un identikit approfondito orientato alla consulenza energetica. Raccogli e sintetizza le seguenti informazioni (se disponibili da fonti pubbliche):\n🔹 Profilo generale dell'azienda\n– Ragione sociale, anno di fondazione, struttura societaria\n– Storia e sviluppo aziendale\n– Settore merceologico / categoria ATECO\n– Sedi operative, stabilimenti e presenza territoriale\n🔹 Dimensioni e struttura economica\n– Numero dipendenti\n– Fatturato annuo e trend economico (ultimi 3 anni)\n– Presenza di stabilimenti energivori o grandi superfici\n🔹 Consumo e fabbisogno energetico potenziale\n– Indizi sulla potenza impegnata / consumi elettrici stimati\n– Tipologia di utenze: produttive, logistiche, direzionali, commerciali\n– Presenza di turnazioni h24 o lavorazioni energivore\n🔹 Stato attuale dell'approvvigionamento energetico\n– Indizi su contratti luce/gas\n– Presenza di sistemi di monitoraggio energetico\n– Presenza di impianti di autoproduzione (es. fotovoltaico, cogenerazione)\n– Presenza di colonnine EV o politiche ESG\n🔹 Altri elementi strategici o opportunità commerciali\n– Eventuali criticità energetiche o opportunità di ottimizzazione\n– Progetti recenti di efficienza energetica, sostenibilità o digitalizzazione\n– Collaborazioni con ESCo o consulenti energetici\nFornisci il profilo sotto forma di scheda strutturata (tipo report operativo per consulente). Evidenzia opportunità di intervento commerciale, criticità e punti di forza. Se i dati non sono disponibili, segnala l'informazione come non reperita."
   },
   {
     id: 'pr1',
@@ -49,8 +47,7 @@ const DEFAULT_PROMPTS = [
     category: 'Simulatore Elettrico',
     description: 'Estrai e riassumi dati di consumo da fattura PDF.',
     text:
-      'Ruolo: Estrattore dati da fattura cliente.\nInput: file PDF contenente la fattura.\nAttività:\n- Estrai i seguenti dati dalla fattura:\n  • Consumi (kWh) suddivisi per fascia oraria, se disponibili (F1, F2, F3).\n  • Tipologie di prodotti/servizi utilizzati.\n  • Quantità di ciascun prodotto/servizio.\n  • Prezzi attuali applicati.\n  • Condizioni contrattuali rilevabili (durata contratto, penali, ecc.).\nOutput:\n- Restituisci un riepilogo strutturato in formato tabellare con i dati sopra elencati.\n- Evidenzia eventuali dati mancanti o ambigui da verificare.\nNota: presta attenzione alle unità di misura e ai dettagli contrattuali.',
-    tags: ['1']
+      'Ruolo: Estrattore dati da fattura cliente.\nInput: file PDF contenente la fattura.\nAttività:\n- Estrai i seguenti dati dalla fattura:\n  • Consumi (kWh) suddivisi per fascia oraria, se disponibili (F1, F2, F3).\n  • Tipologie di prodotti/servizi utilizzati.\n  • Quantità di ciascun prodotto/servizio.\n  • Prezzi attuali applicati.\n  • Condizioni contrattuali rilevabili (durata contratto, penali, ecc.).\nOutput:\n- Restituisci un riepilogo strutturato in formato tabellare con i dati sopra elencati.\n- Evidenzia eventuali dati mancanti o ambigui da verificare.\nNota: presta attenzione alle unità di misura e ai dettagli contrattuali.'
   },
   {
     id: 'se2',
@@ -59,8 +56,7 @@ const DEFAULT_PROMPTS = [
     description:
       'Analizza offerte da file Excel e prepara tabella confronto.',
     text:
-      'Ruolo: Analizzatore offerte da file Excel.\nInput: file Excel contenente le offerte prodotti per fornitura elettrica, con colonne dettagliate.\nAttività:\n- Leggi e struttura i dati del file Excel.\n- Per ogni offerta, interpreta correttamente le formule di prezzo: PUN, MIX, ABB+PUN, FIX.\n- Evidenzia offerte con PCV pari a zero e come trattarle.\n- Fornisci una tabella strutturata con tutte le informazioni pronte per il confronto.\nOutput:\n- Tabella con tutte le offerte pronte per analisi.\n- Eventuali note su vincoli o particolarità delle offerte.',
-    tags: ['2']
+      'Ruolo: Analizzatore offerte da file Excel.\nInput: file Excel contenente le offerte prodotti per fornitura elettrica, con colonne dettagliate.\nAttività:\n- Leggi e struttura i dati del file Excel.\n- Per ogni offerta, interpreta correttamente le formule di prezzo: PUN, MIX, ABB+PUN, FIX.\n- Evidenzia offerte con PCV pari a zero e come trattarle.\n- Fornisci una tabella strutturata con tutte le informazioni pronte per il confronto.\nOutput:\n- Tabella con tutte le offerte pronte per analisi.\n- Eventuali note su vincoli o particolarità delle offerte.'
   },
   {
     id: 'se3',
@@ -69,8 +65,7 @@ const DEFAULT_PROMPTS = [
     description:
       'Confronta offerte e identifica la migliore opzione.',
     text:
-      'Ruolo: Simulatore per confronto offerte e identificazione della migliore opzione.\nInput:\n- Dati estratti dalla fattura cliente (Prompt 1).\n- Tabella offerte strutturata (Prompt 2).\nAttività:\n- Confronta i prodotti/servizi attualmente usati dal cliente con le offerte presenti.\n- Valuta prezzo unitario, condizioni contrattuali e durata contratto.\n- Calcola il costo stimato per ogni offerta basandoti sui consumi reali.\n- Genera una lista ordinata delle offerte alternative potenzialmente migliori.\n- Evidenzia vincoli o particolarità rilevanti.\nOutput: Tabella riepilogativa e sintesi raccomandazioni.',
-    tags: ['3']
+      'Ruolo: Simulatore per confronto offerte e identificazione della migliore opzione.\nInput:\n- Dati estratti dalla fattura cliente (Prompt 1).\n- Tabella offerte strutturata (Prompt 2).\nAttività:\n- Confronta i prodotti/servizi attualmente usati dal cliente con le offerte presenti.\n- Valuta prezzo unitario, condizioni contrattuali e durata contratto.\n- Calcola il costo stimato per ogni offerta basandoti sui consumi reali.\n- Genera una lista ordinata delle offerte alternative potenzialmente migliori.\n- Evidenzia vincoli o particolarità rilevanti.\nOutput: Tabella riepilogativa e sintesi raccomandazioni.'
   },
   {
     id: 'se4',
@@ -78,8 +73,7 @@ const DEFAULT_PROMPTS = [
     category: 'Simulatore Elettrico',
     description: 'Genera report finale con raccomandazioni.',
     text:
-      'Ruolo: Generatore di report finale e raccomandazioni.\nInput: tabella riepilogativa delle offerte.\nAttività: analizza e redigi sintesi chiara con offerta consigliata, risparmio, miglioramenti contrattuali, vincoli.\nSuggerisci azioni successive.\nOutput: report testuale; possibili grafici o tabelle.',
-    tags: ['4']
+      'Ruolo: Generatore di report finale e raccomandazioni.\nInput: tabella riepilogativa delle offerte.\nAttività: analizza e redigi sintesi chiara con offerta consigliata, risparmio, miglioramenti contrattuali, vincoli.\nSuggerisci azioni successive.\nOutput: report testuale; possibili grafici o tabelle.'
   },
   {
     id: 'fv1',
@@ -93,9 +87,9 @@ const DEFAULT_PROMPTS = [
     id: 'lc1',
     title: 'Lettura Consumi Next – Analisi fasce',
     category: 'Lettura Consumi Next',
-    description: 'Calcola consumi annui per fasce orarie e genera grafico.',
+    description: 'Estrai e analizza i consumi mensili distinguendo letture progressive vs consumi reali. Tabella + grafici.',
     text:
-      '1. Calcola il consumo annuo per ciascuna delle tre fasce orarie (F1, F2, F3) e il consumo totale annuo, espressi in MWh, utilizzando le letture di Next che ti fornisco in allegato.\n2. Crea una tabella Excel scaricabile con colonne: Consumo fascia F1, Consumo fascia F2, Consumo fascia F3, Consumo totale annuo.\n3. Genera un grafico a linee dei consumi mensili in kWh suddivisi per fascia oraria e totale e fornisci analisi dettagliata.'
+      "🔹 Analisi Consumi/Letture Next \n\n🎯 Obiettivo\nEstrarre e analizzare i consumi elettrici mensili da file Excel, distinguendo automaticamente tra letture progressive e consumi reali. Restituire tabella riepilogativa + grafici.\n\n📥 Input richiesto\n• File Excel con colonne:\n\nPeriodo (colonna A)\n\nConsumo F1 (kWh) (colonna F)\n\nConsumo F2 (kWh) (colonna G)\n\nConsumo F3 (kWh) (colonna H)\n\nPotenza massima (kW) (colonna AJ)\n\n🧠 Attività da svolgere\n\nPre-processing\n\nConverti eventuali valori testo → numerici.\n\nIgnora righe vuote o con valori anomali.\n\nSe tutti i valori F1/F2/F3 = 0 → escludi il mese.\n\nDistinzione Consumi vs Letture\n\nSe i valori mensili crescono in modo costante senza oscillazioni → considera letture progressive → calcola il consumo del mese = differenza tra mese corrente e precedente.\n\nSe i valori oscillano (in aumento o diminuzione) → considera consumi reali → usa i valori così come sono.\n\nCalcoli richiesti\n\nConsumo mensile per fascia (F1, F2, F3).\n\nConsumo totale mensile = F1+F2+F3.\n\nPotenza massima mensile (riportata dalla colonna AJ).\n\nRiepilogo annuo:\n• Totale F1, F2, F3 e totale complessivo (in kWh e in MWh).\n• % di ciascuna fascia sul totale.\n• Potenza massima annua = valore massimo fra i mesi.\n\n📤 Output atteso\n\nTabella riepilogativa mensile con colonne:\nPeriodo | F1 (kWh) | F2 (kWh) | F3 (kWh) | Totale mensile (kWh) | Potenza max (kW)\n\nuna riga finale di riepilogo con Totale annuo (MWh) e % per fascia.\n\nGrafico:\n\nA linee o barre con consumi mensili suddivisi per fascia + totale.\n\nSintesi testuale chiara:\n\nConsumi annui totali (MWh).\n\nRipartizione % F1, F2, F3.\n\nPotenza massima riscontrata.\n\nEvidenzia se i dati erano letture progressive o consumi reali.\n\n⚠️ Guardrail\n\nNon generare codice o script.\n\nSe un dato non è disponibile, scrivi “Non reperito / Da verificare”.\n\n🔚 Chiusura\n✅ Output completato – analisi terminata."
   },
   {
     id: 'nf1',
@@ -114,47 +108,21 @@ const DEFAULT_PROMPTS = [
       'Email di ringraziamento, assistenza e richiesta feedback post installazione.',
     text:
       'Crea una e-mail post installazione per ringraziare il cliente, offrire assistenza e richiedere feedback.'
-  },
-
-  /* ===== Nuova categoria: Analisi di Mercato ===== */
-  {
-    id: 'm1',
-    title: 'Report Energia B2B – Report Completo',
-    category: 'Analisi di Mercato',
-    description: 'Report approfondito (mensile/trimestrale) con dati ufficiali, grafici e raccomandazioni.',
-    text:
-      "Agisci come un analista energetico esperto specializzato nel mercato B2B luce e gas in Italia.\nElabora un report di mercato aggiornato basandoti solo su fonti ufficiali e autorevoli (ARERA, Terna, GME, GSE, Eurostat, IEA, Ministero Ambiente/Energia).\n\nIl report deve includere:\n\n1. Executive summary (max 10 bullet point) con dati chiave, trend e implicazioni per le imprese.\n\n2. Andamento prezzi energia elettrica e gas (ultimi 6–12 mesi) con grafici a linee.\n\n3. Previsioni a breve termine (3–6 mesi) con scenari possibili, citando fonti e limiti.\n\n4. Normative rilevanti (italiane ed europee) che impattano sui costi.\n\n5. Confronto PMI vs grandi aziende (tabella comparativa su consumi, contratti e costi).\n\n6. Trend sostenibilità e rinnovabili nel B2B.\n\n7. Best practice e opportunità di risparmio adottate dalle aziende leader.\n\n8. Nota metodologica: fonti, affidabilità dei dati e limiti previsionali.\n\nUsa tabelle e grafici dove utile.\nConcludi con 3–5 raccomandazioni pratiche per i decisori aziendali.",
-    tags: ['Perplexity']
-  },
-  {
-    id: 'm2',
-    title: 'Report Energia B2B – Flash Report',
-    category: 'Analisi di Mercato',
-    description: 'Flash report settimanale/bisettimanale con 5 punti chiave e mini-tabelle.',
-    text:
-      "Agisci come un analista energetico B2B.\nGenera un flash report settimanale sul mercato energia elettrica e gas in Italia, basandoti su fonti ufficiali e autorevoli (ARERA, Terna, GME, GSE, Eurostat, IEA, Ministero Ambiente/Energia).\n\nIncludi in massimo 5 punti chiave:\n\n1. Andamento prezzi energia elettrica e gas (ultima settimana)\n\n2. Differenze principali rispetto al mese scorso\n\n3. Novità normative rilevanti (se presenti)\n\n4. Opportunità o rischi per imprese B2B (PMI e grandi aziende)\n\n5. Una raccomandazione pratica per i decisori aziendali\n\nPresenta il tutto in modo chiaro, sintetico e con eventuali mini-tabelle comparative.",
-    tags: ['Perplexity']
-  },
-  {
-    id: 'm3',
-    title: 'Report Energia B2B – Market Alert',
-    category: 'Analisi di Mercato',
-    description: 'Alert lampo (giornaliero/occasionale) in 3 bullet per WhatsApp/LinkedIn/email.',
-    text:
-      "Agisci come un analista energetico B2B.\nGenera un market alert sintetico sul mercato energia elettrica e gas in Italia basandoti su fonti ufficiali e autorevoli (ARERA, Terna, GME, GSE, Eurostat, IEA, Ministero Ambiente/Energia).\n\nRiassumi in 3 bullet point massimo:\n• Andamento prezzi luce e gas rispetto alla settimana precedente\n• Novità o eventi critici (mercato, geopolitica, normative) che impattano i costi\n• Raccomandazione pratica immediata per aziende B2B (PMI e grandi imprese)\n\nStile: chiaro, incisivo, pronto per un messaggio breve.",
-    tags: ['Perplexity']
   }
 ];
 
 /* ===================== COSTANTI STORAGE ===================== */
-const LS_PROMPTS_KEY = 'promptsStore:v1';
-const DISCLAIMER_KEY = 'disclaimerAccepted:v1';
+const LS_PROMPTS_KEY = 'promptsStore:v1';      // dove salvo i prompt importati
+const DISCLAIMER_KEY = 'disclaimerAccepted:v1';// per “prima visita” disclaimer
 
 /* ===================== HELPERS ===================== */
 function escapeHtml(text = '') {
   return String(text).replace(/[&<>"']/g, (ch) =>
     ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch])
   );
+}
+function sanitizeFilename(filename) {
+  return filename.replace(/[^a-z0-9\s\-_]/gi, '_').toLowerCase();
 }
 function escapeRegExp(str = '') {
   return String(str).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -170,8 +138,10 @@ function highlight(text = '', query = '') {
 
 /* ===================== COMPONENT ===================== */
 export default function Page() {
+  // Stato principale: i prompt visualizzati (default oppure importati da localStorage)
   const [prompts, setPrompts] = useState(DEFAULT_PROMPTS);
 
+  // UI state
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('');
   const [favorites, setFavorites] = useState(new Set());
@@ -179,33 +149,40 @@ export default function Page() {
   const [toastMsg, setToastMsg] = useState('');
   const [toastVisible, setToastVisible] = useState(false);
 
+  // Modale prompt
   const [modalOpen, setModalOpen] = useState(false);
   const [activePrompt, setActivePrompt] = useState(null);
 
+  // Admin & import
   const [isAdmin, setIsAdmin] = useState(false);
   const [adminModalOpen, setAdminModalOpen] = useState(false);
   const [adminPass, setAdminPass] = useState('');
   const [adminError, setAdminError] = useState('');
 
+  // Disclaimer
   const [disclaimerOpen, setDisclaimerOpen] = useState(false);
 
   const fileInputRef = useRef(null);
 
+  /* ===== Bootstrap: carico preferiti e prompts dal browser ===== */
   useEffect(() => {
     try {
+      // preferiti (sessione)
       const savedFavs = sessionStorage.getItem('promptFavorites');
       if (savedFavs) setFavorites(new Set(JSON.parse(savedFavs)));
-
+      // prompts (persistenti, personali)
       const savedPrompts = localStorage.getItem(LS_PROMPTS_KEY);
       if (savedPrompts) {
         const parsed = JSON.parse(savedPrompts);
         if (Array.isArray(parsed) && parsed.length > 0) setPrompts(parsed);
       }
+      // admin persistito
       const a = sessionStorage.getItem('isAdmin') === '1';
       setIsAdmin(a);
     } catch {}
   }, []);
 
+  // Auto-apri disclaimer alla prima visita
   useEffect(() => {
     try {
       const accepted = localStorage.getItem(DISCLAIMER_KEY) === '1';
@@ -213,6 +190,7 @@ export default function Page() {
     } catch {}
   }, []);
 
+  // ESC chiude modali
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === 'Escape') {
@@ -225,6 +203,7 @@ export default function Page() {
     return () => window.removeEventListener('keydown', onKey);
   }, [modalOpen, adminModalOpen, disclaimerOpen]);
 
+  /* ===== Utils ===== */
   const showToast = (msg) => {
     setToastMsg(msg);
     setToastVisible(true);
@@ -238,6 +217,7 @@ export default function Page() {
     } catch {}
   };
 
+  /* ===== Filtri grid ===== */
   const filtered = useMemo(() => {
     const term = search.toLowerCase().trim();
     return prompts.filter((p) => {
@@ -252,6 +232,7 @@ export default function Page() {
     });
   }, [prompts, search, category, showOnlyFav, favorites]);
 
+  /* ===== Azioni card ===== */
   const copyPrompt = async (id) => {
     const p = prompts.find((x) => x.id === id);
     if (!p) return;
@@ -282,6 +263,7 @@ export default function Page() {
     persistFavorites(next);
   };
 
+  // Modale Dettagli
   function openDetails(p) {
     setActivePrompt(p);
     setModalOpen(true);
@@ -293,6 +275,7 @@ export default function Page() {
     try { document.body.style.overflow = ''; } catch {}
   }
 
+  /* ===== Import .docx (solo Admin) ===== */
   const handleDocx = async (file) => {
     try {
       showToast('Caricamento file in corso...');
@@ -303,10 +286,12 @@ export default function Page() {
         showToast('Nessun prompt valido trovato nel file.');
         return;
       }
+      // sostituisco l’elenco con quelli importati
       setPrompts(newPrompts);
       try {
         localStorage.setItem(LS_PROMPTS_KEY, JSON.stringify(newPrompts));
       } catch {}
+      // reset UI secondari
       persistFavorites(new Set());
       setShowOnlyFav(false);
       setSearch('');
@@ -318,8 +303,9 @@ export default function Page() {
     }
   };
 
+  // Parser .docx -> lista prompt
   function parseDocxContent(text) {
-    const out = [];
+    const promptsOut = [];
     const lines = text.split('\n').map((l) => l.trim()).filter(Boolean);
     let current = null;
     let buf = [];
@@ -327,23 +313,27 @@ export default function Page() {
       const line = lines[i];
       const looksLikeTitle = line.length < 120 && !line.includes('\t') && !line.startsWith('-') && !line.startsWith('•');
       if (looksLikeTitle) {
+        // chiudo precedente
         if (current && current.title) {
           current.text = buf.join('\n').trim();
-          if (current.text && current.category) out.push(current);
+          if (current.text && current.category) promptsOut.push(current);
         }
+        // nuovo
         current = {
-          id: `imported_${Date.now()}_${out.length}`,
+          id: `imported_${Date.now()}_${promptsOut.length}`,
           title: line,
           category: '',
           description: '',
-          text: '',
-          tags: []
+          text: ''
         };
         buf = [];
+        // prova a prendere la riga successiva come categoria se breve e senza punteggiatura forte
         for (let j = i + 1; j < Math.min(i + 3, lines.length); j++) {
           const nl = lines[j];
           if (nl.length < 50 && !nl.includes('.') && !nl.includes(':')) {
-            current.category = nl; i = j; break;
+            current.category = nl;
+            i = j;
+            break;
           }
         }
         if (!current.category) current.category = 'Importato';
@@ -356,18 +346,19 @@ export default function Page() {
     }
     if (current && current.title) {
       current.text = buf.join('\n').trim();
-      if (current.text && current.category) out.push(current);
+      if (current.text && current.category) promptsOut.push(current);
     }
-    return out;
+    return promptsOut;
   }
 
+  /* ===== Admin auth ===== */
   function openAdmin() {
     setAdminPass('');
     setAdminError('');
     setAdminModalOpen(true);
   }
   function confirmAdmin() {
-    if (adminPass === 'KAMAI2025') {
+    if (adminPass === 'ALFREDO2025') {
       setIsAdmin(true);
       try { sessionStorage.setItem('isAdmin', '1'); } catch {}
       setAdminModalOpen(false);
@@ -377,12 +368,17 @@ export default function Page() {
     }
   }
 
+  /* ===== Reset Libreria (solo Admin) ===== */
   function resetLibrary() {
     if (!isAdmin) return;
-    const ok = window.confirm('Ripristinare la libreria ai prompt di default? I prompt importati localmente verranno rimossi.');
+    const ok = window.confirm(
+      'Ripristinare la libreria ai prompt di default? I prompt importati localmente verranno rimossi.'
+    );
     if (!ok) return;
+    // ripristino
     setPrompts(DEFAULT_PROMPTS);
     try { localStorage.removeItem(LS_PROMPTS_KEY); } catch {}
+    // opzionale: pulisco anche preferiti
     persistFavorites(new Set());
     setShowOnlyFav(false);
     setSearch('');
@@ -390,25 +386,19 @@ export default function Page() {
     showToast('Libreria ripristinata ai prompt di default.');
   }
 
-  function openDisclaimer() { setDisclaimerOpen(true); }
+  /* ===== Disclaimer ===== */
+  function openDisclaimer() {
+    setDisclaimerOpen(true);
+  }
   function acceptDisclaimer() {
     try { localStorage.setItem(DISCLAIMER_KEY, '1'); } catch {}
     setDisclaimerOpen(false);
   }
 
-  // stile inline per i tag-chip
-  const tagStyle = {
-    display: 'inline-block',
-    padding: '2px 8px',
-    fontSize: 12,
-    borderRadius: 6,
-    background: 'var(--color-secondary)',
-    border: '1px solid var(--color-card-border)',
-    marginLeft: 6
-  };
-
+  /* ===================== RENDER ===================== */
   return (
     <>
+      {/* Header */}
       <header className="header">
         <div className="container">
           <div className="header-content">
@@ -417,12 +407,13 @@ export default function Page() {
               <button
                 id="favorites-toggle"
                 className={`btn-blue ${showOnlyFav ? 'active' : ''}`}
-                onClick={() => setShowOnlyFav(s => !s)}
+                onClick={() => setShowOnlyFav((s) => !s)}
                 aria-label="Mostra solo preferiti"
               >
                 {showOnlyFav ? '⭐ Tutti i prompt' : '⭐ I miei preferiti'}
               </button>
 
+              {/* Admin / Import / Reset */}
               {isAdmin ? (
                 <>
                   <button
@@ -498,66 +489,61 @@ export default function Page() {
                 <option value="Lettura Consumi Next">Lettura Consumi Next</option>
                 <option value="Negoziazione/Follow-up">Negoziazione/Follow-up</option>
                 <option value="Gestione Customer Base">Gestione Customer Base</option>
-                <option value="Analisi di Mercato">Analisi di Mercato</option>
               </select>
             </div>
           </div>
         </div>
       </header>
 
+      {/* Main */}
       <main className="main">
         <div className="container">
           <div id="prompts-grid" className="prompts-grid">
-            {filtered.length === 0 ? null : filtered.map((p) => (
-              <div className="prompt-card" key={p.id}>
-                <div className="prompt-card__header">
-                  <h3
-                    className="prompt-card__title"
-                    dangerouslySetInnerHTML={{ __html: highlight(p.title, search) }}
-                  />
-                  <div style={{ display:'flex', alignItems:'center', gap:6, flexWrap:'wrap' }}>
-                    <span className="prompt-card__category">{p.category}</span>
-                    {(p.tags || []).map((t, idx) => (
-                      <span key={idx} style={tagStyle}>
-                        {t}
-                      </span>
-                    ))}
+            {filtered.length === 0
+              ? null
+              : filtered.map((p) => (
+                  <div className="prompt-card" key={p.id}>
+                    <div className="prompt-card__header">
+                      <h3
+                        className="prompt-card__title"
+                        dangerouslySetInnerHTML={{ __html: highlight(p.title, search) }}
+                      />
+                      <span className="prompt-card__category">{p.category}</span>
+                    </div>
+
+                    <div
+                      className="prompt-card__description clamp-2"
+                      dangerouslySetInnerHTML={{ __html: highlight(p.description, search) }}
+                    />
+
+                    <div className="prompt-card__meta">
+                      <button
+                        className="link-btn details-btn"
+                        onClick={() => openDetails(p)}
+                        aria-label={`Apri dettagli del prompt ${p.title}`}
+                      >
+                        Dettagli ⤵︎
+                      </button>
+                    </div>
+
+                    <div className="prompt-card__actions">
+                      <button
+                        className="btn-blue"
+                        onClick={() => copyPrompt(p.id)}
+                        aria-label="Copia prompt"
+                      >
+                        📋 Copia
+                      </button>
+                      <button
+                        className={`btn-blue favorite-btn ${favorites.has(p.id) ? 'active' : ''}`}
+                        onClick={() => toggleFavorite(p.id)}
+                        aria-label={favorites.has(p.id) ? 'Rimuovi dai preferiti' : 'Aggiungi ai preferiti'}
+                      >
+                        {favorites.has(p.id) ? '⭐' : '☆'}
+                      </button>
+                    </div>
                   </div>
-                </div>
-
-                <div
-                  className="prompt-card__description clamp-2"
-                  dangerouslySetInnerHTML={{ __html: highlight(p.description, search) }}
-                />
-
-                <div className="prompt-card__meta">
-                  <button
-                    className="link-btn details-btn"
-                    onClick={() => openDetails(p)}
-                    aria-label={`Apri dettagli del prompt ${p.title}`}
-                  >
-                    Dettagli ⤵︎
-                  </button>
-                </div>
-
-                <div className="prompt-card__actions">
-                  <button
-                    className="btn-blue"
-                    onClick={() => copyPrompt(p.id)}
-                    aria-label="Copia prompt"
-                  >
-                    📋 Copia
-                  </button>
-                  <button
-                    className={`btn-blue favorite-btn ${favorites.has(p.id) ? 'active' : ''}`}
-                    onClick={() => toggleFavorite(p.id)}
-                    aria-label={favorites.has(p.id) ? 'Rimuovi dai preferiti' : 'Aggiungi ai preferiti'}
-                  >
-                    {favorites.has(p.id) ? '⭐' : '☆'}
-                  </button>
-                </div>
-              </div>
-            ))}
+                ))}
           </div>
 
           {filtered.length === 0 && (
@@ -568,10 +554,13 @@ export default function Page() {
         </div>
       </main>
 
+      {/* Modale Dettagli Prompt */}
       {modalOpen && activePrompt && (
         <div
           className="modal-backdrop"
-          onClick={(e) => { if (e.target.classList.contains('modal-backdrop')) closeDetails(); }}
+          onClick={(e) => {
+            if (e.target.classList.contains('modal-backdrop')) closeDetails();
+          }}
           role="dialog"
           aria-modal="true"
           aria-label={`Dettagli prompt: ${activePrompt.title}`}
@@ -579,7 +568,9 @@ export default function Page() {
           <div className="modal">
             <div className="modal__header">
               <h3 className="modal__title">{activePrompt.title}</h3>
-              <button className="modal__close" onClick={closeDetails} aria-label="Chiudi">✕</button>
+              <button className="modal__close" onClick={closeDetails} aria-label="Chiudi">
+                ✕
+              </button>
             </div>
 
             <div className="modal__category">{activePrompt.category}</div>
@@ -590,23 +581,30 @@ export default function Page() {
             </div>
 
             <div className="modal__actions">
-              <button className="btn-blue" onClick={() => copyPrompt(activePrompt.id)}>📋 Copia prompt</button>
+              <button className="btn-blue" onClick={() => copyPrompt(activePrompt.id)}>
+                📋 Copia prompt
+              </button>
               <button
                 className={`btn-blue favorite-btn ${favorites.has(activePrompt.id) ? 'active' : ''}`}
                 onClick={() => toggleFavorite(activePrompt.id)}
               >
                 {favorites.has(activePrompt.id) ? '⭐ Rimuovi dai preferiti' : '☆ Aggiungi ai preferiti'}
               </button>
-              <button className="btn-blue btn-ghost" onClick={closeDetails}>Chiudi</button>
+              <button className="btn-blue btn-ghost" onClick={closeDetails}>
+                Chiudi
+              </button>
             </div>
           </div>
         </div>
       )}
 
+      {/* Modale Admin */}
       {adminModalOpen && (
         <div
           className="modal-backdrop"
-          onClick={(e) => { if (e.target.classList.contains('modal-backdrop')) setAdminModalOpen(false); }}
+          onClick={(e) => {
+            if (e.target.classList.contains('modal-backdrop')) setAdminModalOpen(false);
+          }}
           role="dialog"
           aria-modal="true"
           aria-label="Accesso amministratore"
@@ -614,11 +612,15 @@ export default function Page() {
           <div className="modal">
             <div className="modal__header">
               <h3 className="modal__title">Accesso amministratore</h3>
-              <button className="modal__close" onClick={() => setAdminModalOpen(false)} aria-label="Chiudi">✕</button>
+              <button className="modal__close" onClick={() => setAdminModalOpen(false)} aria-label="Chiudi">
+                ✕
+              </button>
             </div>
 
             <div className="modal__body" style={{ paddingTop: 16 }}>
-              <label className="form-label" htmlFor="admin-pass">Inserisci password</label>
+              <label className="form-label" htmlFor="admin-pass">
+                Inserisci password
+              </label>
               <input
                 id="admin-pass"
                 type="password"
@@ -638,10 +640,13 @@ export default function Page() {
         </div>
       )}
 
+      {/* Modale Disclaimer */}
       {disclaimerOpen && (
         <div
           className="modal-backdrop"
-          onClick={(e) => { if (e.target.classList.contains('modal-backdrop')) setDisclaimerOpen(false); }}
+          onClick={(e) => {
+            if (e.target.classList.contains('modal-backdrop')) setDisclaimerOpen(false);
+          }}
           role="dialog"
           aria-modal="true"
           aria-label="Disclaimer"
@@ -649,7 +654,9 @@ export default function Page() {
           <div className="modal">
             <div className="modal__header">
               <h3 className="modal__title">Disclaimer</h3>
-              <button className="modal__close" onClick={() => setDisclaimerOpen(false)} aria-label="Chiudi">✕</button>
+              <button className="modal__close" onClick={() => setDisclaimerOpen(false)} aria-label="Chiudi">
+                ✕
+              </button>
             </div>
 
             <div className="modal__body" style={{ paddingTop: 16 }}>
@@ -668,6 +675,7 @@ export default function Page() {
         </div>
       )}
 
+      {/* Footer con link Disclaimer (arancione + semi-bold) */}
       <footer className="footer">
         <div className="container" style={{ display: 'flex', justifyContent: 'center', gap: 12, alignItems: 'center' }}>
           <p style={{ margin: 0 }}>Realizzato con ❤️ da <strong>Alfredo Palermi</strong></p>
@@ -676,14 +684,20 @@ export default function Page() {
             className="link-btn"
             onClick={openDisclaimer}
             aria-label="Apri disclaimer"
-            style={{ fontSize: 14, color: '#f59e0b', fontWeight: 600 }}
+            style={{ fontSize: 14, color: '#f59e0b', fontWeight: 600 }} // arancione + semibold
           >
             ⚠️ Disclaimer
           </button>
         </div>
       </footer>
 
-      <div id="toast" className={`toast ${toastVisible ? 'show' : ''}`} role="alert" aria-live="polite">
+      {/* Toast */}
+      <div
+        id="toast"
+        className={`toast ${toastVisible ? 'show' : ''}`}
+        role="alert"
+        aria-live="polite"
+      >
         <span id="toast-message">{toastMsg}</span>
       </div>
     </>

@@ -74,14 +74,14 @@ const DEFAULT_PROMPTS = [
   tags: ['3']
 },
   {
-    id: 'se4',
-    title: 'Simulatore Elettrico – Report finale',
-    category: 'Simulatore Elettrico',
-    description: 'Genera report finale con raccomandazioni.',
-    text:
-      'Ruolo: Generatore di report finale e raccomandazioni.\nInput: tabella riepilogativa delle offerte.\nAttività: analizza e redigi sintesi chiara con offerta consigliata, risparmio, miglioramenti contrattuali, vincoli.\nSuggerisci azioni successive.\nOutput: report testuale; possibili grafici o tabelle.',
-    tags: ['4']
-  },
+  id: 'se4',
+  title: 'Simulatore Elettrico – Report Consulenziale',
+  category: 'Simulatore Elettrico',
+  description: 'Genera un report chiaro e professionale per il cliente sulla base del confronto eseguito.',
+  text:
+    "🔹 Prompt 4 – Report Consulenziale\n\n🎯 Obiettivo\nGenerare un report chiaro e professionale per il cliente sulla base del confronto eseguito.\n\n📥 Input richiesto\n• Tabella comparativa dal Prompt 3\n\n🧰 Attività richieste\n• Identifica offerta più conveniente\n• Indica risparmio stimato (mensile e annuo)\n• Elenca miglioramenti contrattuali\n• Evidenzia rischi o vincoli\n• Suggerisci azioni successive\n\n📤 Output atteso\n• Report in 3–4 paragrafi, tono professionale e leggibile per decisori non tecnici, con:\n  • Offerta consigliata e risparmio stimato\n  • Vantaggi contrattuali\n  • Rischi/vincoli\n  • Next step operativo (e scadenze)\n• Tabella riepilogativa: Nome Offerta | Spesa Annua | Risparmio | Vantaggi | Vincoli | Raccomandazione\n\n🚫 Non generare codice o script di programmazione\n\n🔚 Al termine, scrivi sempre:\n✅ Output completato – simulazione completata",
+  tags: ['4']
+},
   {
     id: 'fv1',
     title: 'Preventivatore FV – Pre-preventivo',

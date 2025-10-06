@@ -54,15 +54,15 @@ const DEFAULT_PROMPTS = [
   tags: ['1']
 },
   {
-    id: 'se2',
-    title: 'Simulatore Elettrico – Analizzatore offerte',
-    category: 'Simulatore Elettrico',
-    description:
-      'Analizza offerte da file Excel e prepara tabella confronto.',
-    text:
-      'Ruolo: Analizzatore offerte da file Excel.\nInput: file Excel contenente le offerte prodotti per fornitura elettrica, con colonne dettagliate.\nAttività:\n- Leggi e struttura i dati del file Excel.\n- Per ogni offerta, interpreta correttamente le formule di prezzo: PUN, MIX, ABB+PUN, FIX.\n- Evidenzia offerte con PCV pari a zero e come trattarle.\n- Fornisci una tabella strutturata con tutte le informazioni pronte per il confronto.\nOutput:\n- Tabella con tutte le offerte pronte per analisi.\n- Eventuali note su vincoli o particolarità delle offerte.',
-    tags: ['2']
-  },
+  id: 'se2',
+  title: 'Simulatore Elettrico – Analizzatore offerte',
+  category: 'Simulatore Elettrico',
+  description:
+    'Analizza e standardizza le offerte da file Excel Riepilogo CTE per il confronto con i consumi del cliente.',
+  text:
+    "🔹 Prompt 2 – Analisi Offerte da Excel (Riepilogo CTE)\n\n🎯 Obiettivo\nPulire, standardizzare e preparare le offerte commerciali dal file Excel per l’analisi comparativa.\n\n📥 Input richiesto\n• File Excel Riepilogo CTE (struttura costante)\n\n🧰 Attività richieste\n1. Pre-elaborazione file:\n   o Rimuovi merge e intestazioni multiple\n   o Assegna a ogni colonna un nome chiaro e univoco\n\n2. Standardizza le colonne principali:\n   o Nome_Offerta\n   o Tipo_Prezzo (TReND, FIX, MIX, ABB+PUN, PUN)\n   o PCV_mensile\n   o Durata_mesi\n   o Validità_DAL, Validità_AL\n   o Prezzi Lordo Perdite (F1, F2, F3)\n   o Note/Vincoli\n\n3. Formula_Tariffaria (compatta):\n   o TReND/PUN = PCV + (PUN + Prezzo_Lordo_Perdite) × kWh\n   o FIX = PCV + Prezzo fisso × kWh\n   o MIX = Quota Fissa % × Prezzo fisso + Quota Variabile % × (PUN+α)\n   o ABB+PUN = Abbonamento + PUN × kWh\n   o Se PCV=0 → offerta senza quota fissa\n\n4. Flag diagnostici:\n   o Valutabile\n   o Motivo_Non_Valutabile\n   o PCV_zero\n   o Richiede_PUN\n   o Formula_validata\n\n📤 Output atteso\n• Tabella con offerte strutturate e flag\n• Salva file come “Riepilogo CTE standard.xlsx”\n• Conferma in chat quante offerte sono valutabili\n\n🚫 Non generare codice o script di programmazione\n\n🔚 Al termine, scrivi sempre:\n✅ Output completato – in attesa del Prompt 3",
+  tags: ['2']
+},
   {
     id: 'se3',
     title: 'Simulatore Elettrico – Confronto offerte',

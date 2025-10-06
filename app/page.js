@@ -44,14 +44,15 @@ const DEFAULT_PROMPTS = [
       'Crea una proposta commerciale per il cliente [nome azienda], evidenziando i benefici di un impianto fotovoltaico da [kWp], ROI stimato in [X] anni, e confronto con il costo attuale in bolletta.'
   },
   {
-    id: 'se1',
-    title: 'Simulatore Elettrico – Estrazione fattura',
-    category: 'Simulatore Elettrico',
-    description: 'Estrai e riassumi dati di consumo da fattura PDF.',
-    text:
-      'Ruolo: Estrattore dati da fattura cliente.\nInput: file PDF contenente la fattura.\nAttività:\n- Estrai i seguenti dati dalla fattura:\n  • Consumi (kWh) suddivisi per fascia oraria, se disponibili (F1, F2, F3).\n  • Tipologie di prodotti/servizi utilizzati.\n  • Quantità di ciascun prodotto/servizio.\n  • Prezzi attuali applicati.\n  • Condizioni contrattuali rilevabili (durata contratto, penali, ecc.).\nOutput:\n- Restituisci un riepilogo strutturato in formato tabellare con i dati sopra elencati.\n- Evidenzia eventuali dati mancanti o ambigui da verificare.\nNota: presta attenzione alle unità di misura e ai dettagli contrattuali.',
-    tags: ['1']
-  },
+  id: 'se1',
+  title: 'Simulatore Elettrico – Estrazione fattura',
+  category: 'Simulatore Elettrico',
+  description:
+    'Estrai in modo accurato i dati principali da una fattura elettrica (PDF) per la simulazione comparativa.',
+  text:
+    "Simulatore Elettrico\n\n🔹 Prompt 1 – Estrazione Fattura Cliente (PDF)\n🎯 Obiettivo\nEstrarre in modo accurato i dati principali da una fattura elettrica per usarli nella simulazione comparativa.\n\n📥 Input richiesto\n• File PDF della fattura del cliente.\n\n🧰 Attività richieste\nLeggi il PDF ed estrai:\n• Periodo di competenza (dal/al) e mese/i di riferimento\n• POD, tensione di fornitura (BT/MT), potenza impegnata\n• Consumi kWh totali e per fasce (F1, F2, F3 se disponibili)\n• Prezzi €/kWh applicati (per fascia o medi)\n• PCV mensile o altri canoni fissi/abbonamenti\n• Offerta attiva (nome, tipologia, durata, date inizio/fine)\n• Penali, clausole di rinnovo, vincoli\n• Altre componenti di materia energia presenti in fattura: dispacciamento, sbilanciamento, perdite, reattiva, ASOS, ARIM, perequazioni\n• Eventuali note utili (es. multisito, turnazioni, orari di produzione)\n\n📤 Output atteso\n• Tabella: Voce | Valore | Note\n• Blocco “Altri dati rilevanti”: periodo, consumi totali e per fascia, prezzo medio €/kWh, tensione BT/MT, PCV, offerta attiva, penali/vincoli, dispacciamento e sbilanciamento da fattura, altre componenti\n\n⚠️ Se un dato non è disponibile → “Non reperito / Da verificare”\n🚫 Non generare codice o script di programmazione\n\n🔚 Al termine, scrivi sempre:\n✅ Output completato – in attesa del Prompt 2",
+  tags: ['1']
+},
   {
     id: 'se2',
     title: 'Simulatore Elettrico – Analizzatore offerte',

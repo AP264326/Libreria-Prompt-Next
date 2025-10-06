@@ -63,16 +63,16 @@ const DEFAULT_PROMPTS = [
     "🔹 Prompt 2 – Analisi Offerte da Excel (Riepilogo CTE)\n\n🎯 Obiettivo\nPulire, standardizzare e preparare le offerte commerciali dal file Excel per l’analisi comparativa.\n\n📥 Input richiesto\n• File Excel Riepilogo CTE (struttura costante)\n\n🧰 Attività richieste\n1. Pre-elaborazione file:\n   o Rimuovi merge e intestazioni multiple\n   o Assegna a ogni colonna un nome chiaro e univoco\n\n2. Standardizza le colonne principali:\n   o Nome_Offerta\n   o Tipo_Prezzo (TReND, FIX, MIX, ABB+PUN, PUN)\n   o PCV_mensile\n   o Durata_mesi\n   o Validità_DAL, Validità_AL\n   o Prezzi Lordo Perdite (F1, F2, F3)\n   o Note/Vincoli\n\n3. Formula_Tariffaria (compatta):\n   o TReND/PUN = PCV + (PUN + Prezzo_Lordo_Perdite) × kWh\n   o FIX = PCV + Prezzo fisso × kWh\n   o MIX = Quota Fissa % × Prezzo fisso + Quota Variabile % × (PUN+α)\n   o ABB+PUN = Abbonamento + PUN × kWh\n   o Se PCV=0 → offerta senza quota fissa\n\n4. Flag diagnostici:\n   o Valutabile\n   o Motivo_Non_Valutabile\n   o PCV_zero\n   o Richiede_PUN\n   o Formula_validata\n\n📤 Output atteso\n• Tabella con offerte strutturate e flag\n• Salva file come “Riepilogo CTE standard.xlsx”\n• Conferma in chat quante offerte sono valutabili\n\n🚫 Non generare codice o script di programmazione\n\n🔚 Al termine, scrivi sempre:\n✅ Output completato – in attesa del Prompt 3",
   tags: ['2']
 },
-  {
-    id: 'se3',
-    title: 'Simulatore Elettrico – Confronto offerte',
-    category: 'Simulatore Elettrico',
-    description:
-      'Confronta offerte e identifica la migliore opzione.',
-    text:
-      'Ruolo: Simulatore per confronto offerte e identificazione della migliore opzione.\nInput:\n- Dati estratti dalla fattura cliente (Prompt 1).\n- Tabella offerte strutturata (Prompt 2).\nAttività:\n- Confronta i prodotti/servizi attualmente usati dal cliente con le offerte presenti.\n- Valuta prezzo unitario, condizioni contrattuali e durata contratto.\n- Calcola il costo stimato per ogni offerta basandoti sui consumi reali.\n- Genera una lista ordinata delle offerte alternative potenzialmente migliori.\n- Evidenzia vincoli o particolarità rilevanti.\nOutput: Tabella riepilogativa e sintesi raccomandazioni.',
-    tags: ['3']
-  },
+ {
+  id: 'se3',
+  title: 'Simulatore Elettrico – Confronto & Simulazione Risparmio',
+  category: 'Simulatore Elettrico',
+  description:
+    'Confronta la fornitura attuale con le offerte a portafoglio e calcola il risparmio stimato per il cliente.',
+  text:
+    "🔹 Prompt 3 – Confronto & Simulazione Risparmio\n\n🎯 Obiettivo\nConfrontare la fornitura attuale con le offerte a portafoglio e calcolare il risparmio stimato.\n\n📥 Input richiesto\n• Dati estratti dalla fattura (Prompt 1)\n• File Excel Riepilogo CTE standard.xlsx (Prompt 2)\n\n🧰 Attività richieste\n1. Recupero PUN GME:\n   o Usa il valore €/kWh del mese (o media ponderata se più mesi)\n   o Recupera dal sito GME\n   o Se non reperibile → chiedi all’utente\n\n2. Calcolo spesa attuale:\n   o Σ [kWh_fascia × prezzo_fascia da bolletta] + PCV\n   o ➕ Dispacciamento + Sbilanciamento presi direttamente dalla fattura\n\n3. Calcolo spesa offerte alternative:\n   o Applica Formula_Tariffaria del Prompt 2\n   o Usa Prezzi Lordo Perdite dal CTE (già inclusivi delle perdite)\n   o Includi sempre: PCV, quota energia, quota fissa/variabile\n\n4. Comparazione e ranking:\n   o Calcola spesa mensile e annua\n   o Determina risparmio mensile e annuo\n   o Ordina offerte per risparmio annuo decrescente\n   o Escludi offerte non valutabili, spiegando il motivo\n\n📤 Output atteso\n• Tabella in chat con colonne: Nome Offerta | Tipo Prezzo | Spesa Attuale Mensile/Annua | Spesa Offerta Mensile/Annua | Risparmio Mensile/Annuale | Durata | Note\n• File Excel “Confronto_offerte_risparmio.xlsx” con le stesse colonne\n• Sintesi finale in 5 righe: offerta consigliata, risparmio stimato, motivi principali, vincoli, prossimo step\n\n🚫 Non generare codice o script di programmazione\n\n🔚 Al termine, scrivi sempre:\n✅ Output completato – in attesa del Prompt 4",
+  tags: ['3']
+},
   {
     id: 'se4',
     title: 'Simulatore Elettrico – Report finale',

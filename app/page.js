@@ -10,36 +10,9 @@ const DEFAULT_PROMPTS = [
     title: 'Scouting – Elenco aziende B2B',
     category: 'Scouting',
     description:
-      'Genera un elenco dettagliato di aziende B2B filtrate per settore, provincia e dimensioni. Output tabellare + CSV, risultati in blocchi da 5.',
-    text: `Agisci come un Business Data Researcher specializzato in lead generation.
-Il tuo compito è raccogliere il maggior numero possibile di aziende secondo i criteri che ti fornirò.
-
-Prima di procedere, chiedimi di specificare:
-- Settore/categoria delle aziende
-- Provincia
-- Consumo energetico annuo minimo (kWh)
-- Numero minimo di dipendenti
-
-Dopo che avrò fornito queste informazioni, genera un elenco dettagliato di aziende B2B che rispettano i criteri.
-
-Per ogni azienda includi:
-- Nome azienda
-- Settore specifico
-- Numero di dipendenti
-- Indirizzo completo
-- Sito web
-- Indirizzo e-mail
-- Numero di telefono
-- Ruolo delle persone chiave (es. responsabile vendite, marketing, acquisti)
-- Profili LinkedIn delle persone chiave (CEO o Energy Manager)
-- Valutazione del potenziale interesse per soluzioni di efficientamento energetico
-
-Requisiti di output
-- Presenta i risultati in formato tabellare (colonne per ogni campo).
-- Se trovi più di 5 aziende, suddividi i risultati in blocchi da massimo 5 aziende ciascuno finché non hai mostrato tutte le aziende (non fermarti al primo gruppo).
-- Se alcuni dati (es. ruoli, LinkedIn, email) non sono disponibili, lascia la cella vuota ma non limitare il numero di aziende.
-- Al termine, genera la stessa lista in formato CSV puro (racchiuso tra \`\`\`), in modo che io possa copiarlo e salvarlo come file .csv apribile in Excel.
-- Non fornire link fittizi: se non puoi creare un file .xlsx scaricabile, limita l’output al formato CSV testuale.`
+      'Genera un elenco dettagliato di aziende B2B nel settore scelto e nella provincia indicata, con filtri su dipendenti e output in Excel.',
+    text:
+      "Genera un elenco dettagliato di aziende B2B nel settore [settore/categoria] situate nella provincia di [nome provincia] con un consumo energetico annuo superiore a [kWh]. Per ogni azienda, includi le seguenti informazioni:\n• Nome azienda\n• Settore specifico\n• Numero di dipendenti \n• Indirizzo completo\n• Sito web\n• Indirizzo e-mail\n• Numero di telefono\n• Ruolo delle persone chiave (es. responsabile vendite, marketing, acquisti)\n• Profili LinkedIn delle persone chiave (CEO o Energy Manager)\n• Valutazione del potenziale interesse per soluzioni di risparmio energetico\nRequisiti:\n1. Filtro: aziende con almeno [n. dipendenti], localizzate nella provincia di [nome provincia].\n2. Presenta i risultati in formato tabellare, con una colonna per ogni campo richiesto.\n3. Al termine, crea un file Excel contenente tutti i dati raccolti e fornisci un link per scaricarlo."
   },
   {
     id: 'p1',
@@ -108,7 +81,7 @@ Requisiti di output
     category: 'Preventivatore Simulatore FV',
     description: 'Calcola pre-preventivo fotovoltaico con scenari e ROI.',
     text:
-      "Genera un pre-preventivo fotovoltaico per [azienda B2B]. L'utente fornirà: consumi annui per fasce, superficie, località, tipologia pannello, costi unitari, ecc. Il sistema deve calcolare costi, produzione, autoconsumo, risparmio, ROI, incentivi 2025, grafico scenari (base, accumulo, accumulo+colonnina), numero pannelli, report PDF scaricabile, salvataggio dati."
+      'Genera un pre-preventivo fotovoltaico per [azienda B2B]. L\'utente fornirà: consumi annui per fasce, superficie, località, tipologia pannello, costi unitari, ecc. Il sistema deve calcolare costi, produzione, autoconsumo, risparmio, ROI, incentivi 2025, grafico scenari (base, accumulo, accumulo+colonnina), numero pannelli, report PDF scaricabile, salvataggio dati.'
   },
   {
     id: 'lc1',
@@ -135,6 +108,32 @@ Requisiti di output
       'Email di ringraziamento, assistenza e richiesta feedback post installazione.',
     text:
       'Crea una e-mail post installazione per ringraziare il cliente, offrire assistenza e richiedere feedback.'
+  },
+
+  /* ===== Nuova categoria: Analisi di Mercato ===== */
+  {
+    id: 'm1',
+    title: 'Report Energia B2B – Report Completo',
+    category: 'Analisi di Mercato',
+    description: 'Report approfondito (mensile/trimestrale) con dati ufficiali, grafici e raccomandazioni.',
+    text:
+      "Agisci come un analista energetico esperto specializzato nel mercato B2B luce e gas in Italia.\nElabora un report di mercato aggiornato basandoti solo su fonti ufficiali e autorevoli (ARERA, Terna, GME, GSE, Eurostat, IEA, Ministero Ambiente/Energia).\n\nIl report deve includere:\n\n1. Executive summary (max 10 bullet point) con dati chiave, trend e implicazioni per le imprese.\n\n2. Andamento prezzi energia elettrica e gas (ultimi 6–12 mesi) con grafici a linee.\n\n3. Previsioni a breve termine (3–6 mesi) con scenari possibili, citando fonti e limiti.\n\n4. Normative rilevanti (italiane ed europee) che impattano sui costi.\n\n5. Confronto PMI vs grandi aziende (tabella comparativa su consumi, contratti e costi).\n\n6. Trend sostenibilità e rinnovabili nel B2B.\n\n7. Best practice e opportunità di risparmio adottate dalle aziende leader.\n\n8. Nota metodologica: fonti, affidabilità dei dati e limiti previsionali.\n\nUsa tabelle e grafici dove utile.\nConcludi con 3–5 raccomandazioni pratiche per i decisori aziendali."
+  },
+  {
+    id: 'm2',
+    title: 'Report Energia B2B – Flash Report',
+    category: 'Analisi di Mercato',
+    description: 'Flash report settimanale/bisettimanale con 5 punti chiave e mini-tabelle.',
+    text:
+      "Agisci come un analista energetico B2B.\nGenera un flash report settimanale sul mercato energia elettrica e gas in Italia, basandoti su fonti ufficiali e autorevoli (ARERA, Terna, GME, GSE, Eurostat, IEA, Ministero Ambiente/Energia).\n\nIncludi in massimo 5 punti chiave:\n\n1. Andamento prezzi energia elettrica e gas (ultima settimana)\n\n2. Differenze principali rispetto al mese scorso\n\n3. Novità normative rilevanti (se presenti)\n\n4. Opportunità o rischi per imprese B2B (PMI e grandi aziende)\n\n5. Una raccomandazione pratica per i decisori aziendali\n\nPresenta il tutto in modo chiaro, sintetico e con eventuali mini-tabelle comparative."
+  },
+  {
+    id: 'm3',
+    title: 'Report Energia B2B – Market Alert',
+    category: 'Analisi di Mercato',
+    description: 'Alert lampo (giornaliero/occasionale) in 3 bullet per WhatsApp/LinkedIn/email.',
+    text:
+      "Agisci come un analista energetico B2B.\nGenera un market alert sintetico sul mercato energia elettrica e gas in Italia basandoti su fonti ufficiali e autorevoli (ARERA, Terna, GME, GSE, Eurostat, IEA, Ministero Ambiente/Energia).\n\nRiassumi in 3 bullet point massimo:\n• Andamento prezzi luce e gas rispetto alla settimana precedente\n• Novità o eventi critici (mercato, geopolitica, normative) che impattano i costi\n• Raccomandazione pratica immediata per aziende B2B (PMI e grandi imprese)\n\nStile: chiaro, incisivo, pronto per un messaggio breve."
   }
 ];
 
@@ -516,6 +515,8 @@ export default function Page() {
                 <option value="Lettura Consumi Next">Lettura Consumi Next</option>
                 <option value="Negoziazione/Follow-up">Negoziazione/Follow-up</option>
                 <option value="Gestione Customer Base">Gestione Customer Base</option>
+                {/* Nuovo filtro */}
+                <option value="Analisi di Mercato">Analisi di Mercato</option>
               </select>
             </div>
           </div>
@@ -711,7 +712,7 @@ export default function Page() {
             className="link-btn"
             onClick={openDisclaimer}
             aria-label="Apri disclaimer"
-            style={{ fontSize: 14, color: '#f59e0b', fontWeight: 600 }} // arancione + semibold
+            style={{ fontSize: 14, color: '#f59e0b', fontWeight: 600 }}
           >
             ⚠️ Disclaimer
           </button>

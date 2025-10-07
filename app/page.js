@@ -52,7 +52,7 @@ const DEFAULT_PROMPTS = [
     description: 'Estrai in modo accurato i dati principali da una fattura elettrica per la simulazione comparativa.',
     text:
       "Simulatore Elettrico\n\n🔹 Prompt 1 – Estrazione Fattura Cliente (PDF)\n🎯 Obiettivo\nEstrarre in modo accurato i dati principali da una fattura elettrica per usarli nella simulazione comparativa.\n📥 Input richiesto\n• File PDF della fattura del cliente.\n🧰 Attività richieste\nLeggi il PDF ed estrai:\n• Periodo di competenza (dal/al) e mese/i di riferimento\n• POD, tensione di fornitura (BT/MT), potenza impegnata\n• Consumi kWh totali e per fasce (F1, F2, F3 se disponibili)\n• Prezzi €/kWh applicati (per fascia o medi)\n• PCV mensile o altri canoni fissi/abbonamenti\n• Offerta attiva (nome, tipologia, durata, date inizio/fine)\n• Penali, clausole di rinnovo, vincoli\n• Altre componenti di materia energia presenti in fattura: dispacciamento, sbilanciamento, perdite, reattiva, ASOS, ARIM, perequazioni\n• Eventuali note utili (es. multisito, turnazioni, orari di produzione)\n📤 Output atteso\n• Tabella: Voce | Valore | Note\n• Blocco “Altri dati rilevanti”: periodo, consumi totali e per fascia, prezzo medio €/kWh, tensione BT/MT, PCV, offerta attiva, penali/vincoli, dispacciamento e sbilanciamento da fattura, altre componenti\n⚠️ Se un dato non è disponibile → “Non reperito / Da verificare”\n🚫 Non generare codice o script di programmazione\n🔚 Al termine, scrivi sempre:\n✅ Output completato – in attesa del Prompt 2",
-    tags: ['P1']
+    tags: ['1']
   },
   {
     id: 'se2',
@@ -61,7 +61,7 @@ const DEFAULT_PROMPTS = [
     description: 'Pulizia e standardizzazione offerte da Excel (Riepilogo CTE) per l’analisi comparativa.',
     text:
       "🔹 Prompt 2 – Analisi Offerte da Excel (Riepilogo CTE)\n🎯 Obiettivo\nPulire, standardizzare e preparare le offerte commerciali dal file Excel per l’analisi comparativa.\n📥 Input richiesto\n• File Excel Riepilogo CTE (struttura costante)\n🧰 Attività richieste\n1. Pre-elaborazione file:\n  o Rimuovi merge e intestazioni multiple\n  o Assegna a ogni colonna un nome chiaro e univoco\n2. Standardizza le colonne principali:\n  o Nome_Offerta\n  o Tipo_Prezzo (TReND, FIX, MIX, ABB+PUN, PUN)\n  o PCV_mensile\n  o Durata_mesi\n  o Validità_DAL, Validità_AL\n  o Prezzi Lordo Perdite (F1, F2, F3)\n  o Note/Vincoli\n3. Formula_Tariffaria (compatta):\n  o TReND/PUN = PCV + (PUN + Prezzo_Lordo_Perdite) × kWh\n  o FIX = PCV + Prezzo fisso × kWh\n  o MIX = Quota Fissa % × Prezzo fisso + Quota Variabile % × (PUN+α)\n  o ABB+PUN = Abbonamento + PUN × kWh\n  o Se PCV=0 → offerta senza quota fissa\n4. Flag diagnostici:\n  o Valutabile\n  o Motivo_Non_Valutabile\n  o PCV_zero\n  o Richiede_PUN\n  o Formula_validata\n📤 Output atteso\n• Tabella con offerte strutturate e flag\n• Salva file come “Riepilogo CTE standard.xlsx”\n• Conferma in chat quante offerte sono valutabili\n🚫 Non generare codice o script di programmazione\n🔚 Al termine, scrivi sempre:\n✅ Output completato – in attesa del Prompt 3",
-    tags: ['P2']
+    tags: ['2']
   },
   {
     id: 'se3',
@@ -70,7 +70,7 @@ const DEFAULT_PROMPTS = [
     description: 'Confronta fornitura attuale vs offerte e calcola risparmio stimato.',
     text:
       "🔹 Prompt 3 – Confronto & Simulazione Risparmio\n🎯 Obiettivo\nConfrontare la fornitura attuale con le offerte a portafoglio e calcolare il risparmio stimato.\n📥 Input richiesto\n• Dati estratti dalla fattura (Prompt 1)\n• File Excel Riepilogo CTE standard.xlsx (Prompt 2)\n🧰 Attività richieste\n1. Recupero PUN GME:\n  o Usa il valore €/kWh del mese (o media ponderata se più mesi)\n  o Recupera dal sito GME\n  o Se non reperibile → chiedi all’utente\n2. Calcolo spesa attuale:\n  o Σ [kWh_fascia × prezzo_fascia da bolletta] + PCV\n  o ➕ Dispacciamento + Sbilanciamento presi direttamente dalla fattura\n3. Calcolo spesa offerte alternative:\n  o Applica Formula_Tariffaria del Prompt 2\n  o Usa Prezzi Lordo Perdite dal CTE (già inclusivi delle perdite)\n  o Includi sempre: PCV, quota energia, quota fissa/variabile\n4. Comparazione e ranking:\n  o Calcola spesa mensile e annua\n  o Determina risparmio mensile e annuo\n  o Ordina offerte per risparmio annuo decrescente\n  o Escludi offerte non valutabili, spiegando il motivo\n📤 Output atteso\n• Tabella in chat con colonne: Nome Offerta | Tipo Prezzo | Spesa Attuale Mensile/Annua | Spesa Offerta Mensile/Annua | Risparmio Mensile/Annuale | Durata | Note\n• File Excel “Confronto_offerte_risparmio.xlsx” con le stesse colonne\n• Sintesi finale in 5 righe: offerta consigliata, risparmio stimato, motivi principali, vincoli, prossimo step\n🚫 Non generare codice o script di programmazione\n🔚 Al termine, scrivi sempre:\n✅ Output completato – in attesa del Prompt 4",
-    tags: ['P3']
+    tags: ['3']
   },
   {
     id: 'se4',
@@ -79,7 +79,7 @@ const DEFAULT_PROMPTS = [
     description: 'Genera un report chiaro e professionale per il cliente sulla base del confronto eseguito.',
     text:
       "🔹 Prompt 4 – Report Consulenziale\n\n🎯 Obiettivo\nGenerare un report chiaro e professionale per il cliente sulla base del confronto eseguito.\n\n📥 Input richiesto\n• Tabella comparativa dal Prompt 3\n\n🧰 Attività richieste\n• Identifica offerta più conveniente\n• Indica risparmio stimato (mensile e annuo)\n• Elenca miglioramenti contrattuali\n• Evidenzia rischi o vincoli\n• Suggerisci azioni successive\n\n📤 Output atteso\n• Report in 3–4 paragrafi, tono professionale e leggibile per decisori non tecnici, con:\n  • Offerta consigliata e risparmio stimato\n  • Vantaggi contrattuali\n  • Rischi/vincoli\n  • Next step operativo (e scadenze)\n• Tabella riepilogativa: Nome Offerta | Spesa Annua | Risparmio | Vantaggi | Vincoli | Raccomandazione\n\n🚫 Non generare codice o script di programmazione\n\n🔚 Al termine, scrivi sempre:\n✅ Output completato – simulazione completata",
-    tags: ['P4']
+    tags: ['4']
   },
 
   {
@@ -158,6 +158,17 @@ const DEFAULT_PROMPTS = [
       'Assistente per creare prompt ottimali con revisione, suggerimenti e domande iterative.',
     text:
       "Voglio che tu diventi il mio Creatore di Prompt personale.\n \nIl tuo obiettivo è aiutarmi a creare il miglior prompt possibile per le mie esigenze. I prompt saranno utilizzati da te, Copilot.\n \nDovrai seguire alla lettera il processo seguente.\n \nLa tua prima risposta sarà chiedermi di cosa dovrebbe trattare il prompt. Fornirò la mia risposta, ma dovremo migliorarla attraverso iterazioni continue passando attraverso i passaggi successivi.\n \nLa tua risposta dovrà quindi essere costituita da 3 sezioni:\n \nA.) Rivedi il prompt (fornisci il tuo prompt riscritto). Dovrebbe essere chiaro, conciso e facilmente compreso da te. \nB.) Suggerimenti (forniscimi dei suggerimenti riguardo quali dettagli includere nei prompt per migliorarli.) \nC.) Domande (fai domande pertinenti relative a quale informazione aggiuntiva migliorerebbe il prompt)"
+  },
+
+  /* ===== Nuovo: Generatore di Immagini ===== */
+  {
+    id: 'gi1',
+    title: 'Generatore di Immagini',
+    category: 'Generatore di Immagini',
+    description:
+      'Crea prompt ottimizzati per immagini: soggetto, scenario, stile, dettagli chiave e suggerimenti.',
+    text:
+      "Voglio che tu diventi il mio generatore di prompt per immagini.\n\nChiedimi prima che immagine desidero ottenere.\n\nPoi, riscrivila in un prompt breve e chiaro con:\n\n• soggetto principale\n\n• ambiente/scenario\n\n• stile visivo (realistico, cartoon, pittura, 3D, futuristico, ecc.)\n\n• dettagli chiave (colori, atmosfera, texture, prospettiva)\n\nRispondi con:\n\n• Prompt finale ottimizzato (max 2 frasi, pronto da incollare).\n\n• 1–2 suggerimenti extra per renderlo più efficace."
   }
 ];
 
@@ -518,12 +529,13 @@ export default function Page() {
                 <option value="Prospecting">Prospecting</option>
                 <option value="Proposition">Proposition</option>
                 <option value="Simulatore Elettrico">Simulatore Elettrico</option>
-                <option value="Preventivatore Simulatore FV">Preventivatore FV</option>
+                <option value="Preventivatore Simulatore FV">Preventivatore Simulatore FV</option>
                 <option value="Lettura Consumi Next">Lettura Consumi Next</option>
                 <option value="Negoziazione/Follow-up">Negoziazione/Follow-up</option>
                 <option value="Gestione Customer Base">Gestione Customer Base</option>
                 <option value="Analisi di Mercato">Analisi di Mercato</option>
                 <option value="Generatore di Prompt">Generatore di Prompt</option>
+                <option value="Generatore di Immagini">Generatore di Immagini</option>
               </select>
             </div>
           </div>

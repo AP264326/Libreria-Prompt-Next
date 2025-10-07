@@ -43,45 +43,45 @@ const DEFAULT_PROMPTS = [
     text:
       'Crea una proposta commerciale per il cliente [nome azienda], evidenziando i benefici di un impianto fotovoltaico da [kWp], ROI stimato in [X] anni, e confronto con il costo attuale in bolletta.'
   },
+
+  /* ===== Simulatore Elettrico (Prompt 1–4 aggiornati) ===== */
   {
-  id: 'se1',
-  title: 'Simulatore Elettrico – Estrazione fattura',
-  category: 'Simulatore Elettrico',
-  description:
-    'Estrai in modo accurato i dati principali da una fattura elettrica (PDF) per la simulazione comparativa.',
-  text:
-    "Simulatore Elettrico\n\n🔹 Prompt 1 – Estrazione Fattura Cliente (PDF)\n🎯 Obiettivo\nEstrarre in modo accurato i dati principali da una fattura elettrica per usarli nella simulazione comparativa.\n\n📥 Input richiesto\n• File PDF della fattura del cliente.\n\n🧰 Attività richieste\nLeggi il PDF ed estrai:\n• Periodo di competenza (dal/al) e mese/i di riferimento\n• POD, tensione di fornitura (BT/MT), potenza impegnata\n• Consumi kWh totali e per fasce (F1, F2, F3 se disponibili)\n• Prezzi €/kWh applicati (per fascia o medi)\n• PCV mensile o altri canoni fissi/abbonamenti\n• Offerta attiva (nome, tipologia, durata, date inizio/fine)\n• Penali, clausole di rinnovo, vincoli\n• Altre componenti di materia energia presenti in fattura: dispacciamento, sbilanciamento, perdite, reattiva, ASOS, ARIM, perequazioni\n• Eventuali note utili (es. multisito, turnazioni, orari di produzione)\n\n📤 Output atteso\n• Tabella: Voce | Valore | Note\n• Blocco “Altri dati rilevanti”: periodo, consumi totali e per fascia, prezzo medio €/kWh, tensione BT/MT, PCV, offerta attiva, penali/vincoli, dispacciamento e sbilanciamento da fattura, altre componenti\n\n⚠️ Se un dato non è disponibile → “Non reperito / Da verificare”\n🚫 Non generare codice o script di programmazione\n\n🔚 Al termine, scrivi sempre:\n✅ Output completato – in attesa del Prompt 2",
-  tags: ['P1']
-},
+    id: 'se1',
+    title: 'Simulatore Elettrico – Estrazione Fattura (PDF)',
+    category: 'Simulatore Elettrico',
+    description: 'Estrai in modo accurato i dati principali da una fattura elettrica per la simulazione comparativa.',
+    text:
+      "Simulatore Elettrico\n\n🔹 Prompt 1 – Estrazione Fattura Cliente (PDF)\n🎯 Obiettivo\nEstrarre in modo accurato i dati principali da una fattura elettrica per usarli nella simulazione comparativa.\n📥 Input richiesto\n• File PDF della fattura del cliente.\n🧰 Attività richieste\nLeggi il PDF ed estrai:\n• Periodo di competenza (dal/al) e mese/i di riferimento\n• POD, tensione di fornitura (BT/MT), potenza impegnata\n• Consumi kWh totali e per fasce (F1, F2, F3 se disponibili)\n• Prezzi €/kWh applicati (per fascia o medi)\n• PCV mensile o altri canoni fissi/abbonamenti\n• Offerta attiva (nome, tipologia, durata, date inizio/fine)\n• Penali, clausole di rinnovo, vincoli\n• Altre componenti di materia energia presenti in fattura: dispacciamento, sbilanciamento, perdite, reattiva, ASOS, ARIM, perequazioni\n• Eventuali note utili (es. multisito, turnazioni, orari di produzione)\n📤 Output atteso\n• Tabella: Voce | Valore | Note\n• Blocco “Altri dati rilevanti”: periodo, consumi totali e per fascia, prezzo medio €/kWh, tensione BT/MT, PCV, offerta attiva, penali/vincoli, dispacciamento e sbilanciamento da fattura, altre componenti\n⚠️ Se un dato non è disponibile → “Non reperito / Da verificare”\n🚫 Non generare codice o script di programmazione\n🔚 Al termine, scrivi sempre:\n✅ Output completato – in attesa del Prompt 2",
+    tags: ['1']
+  },
   {
-  id: 'se2',
-  title: 'Simulatore Elettrico – Analizzatore offerte',
-  category: 'Simulatore Elettrico',
-  description:
-    'Analizza e standardizza le offerte da file Excel Riepilogo CTE per il confronto con i consumi del cliente.',
-  text:
-    "🔹 Prompt 2 – Analisi Offerte da Excel (Riepilogo CTE)\n\n🎯 Obiettivo\nPulire, standardizzare e preparare le offerte commerciali dal file Excel per l’analisi comparativa.\n\n📥 Input richiesto\n• File Excel Riepilogo CTE (struttura costante)\n\n🧰 Attività richieste\n1. Pre-elaborazione file:\n   o Rimuovi merge e intestazioni multiple\n   o Assegna a ogni colonna un nome chiaro e univoco\n\n2. Standardizza le colonne principali:\n   o Nome_Offerta\n   o Tipo_Prezzo (TReND, FIX, MIX, ABB+PUN, PUN)\n   o PCV_mensile\n   o Durata_mesi\n   o Validità_DAL, Validità_AL\n   o Prezzi Lordo Perdite (F1, F2, F3)\n   o Note/Vincoli\n\n3. Formula_Tariffaria (compatta):\n   o TReND/PUN = PCV + (PUN + Prezzo_Lordo_Perdite) × kWh\n   o FIX = PCV + Prezzo fisso × kWh\n   o MIX = Quota Fissa % × Prezzo fisso + Quota Variabile % × (PUN+α)\n   o ABB+PUN = Abbonamento + PUN × kWh\n   o Se PCV=0 → offerta senza quota fissa\n\n4. Flag diagnostici:\n   o Valutabile\n   o Motivo_Non_Valutabile\n   o PCV_zero\n   o Richiede_PUN\n   o Formula_validata\n\n📤 Output atteso\n• Tabella con offerte strutturate e flag\n• Salva file come “Riepilogo CTE standard.xlsx”\n• Conferma in chat quante offerte sono valutabili\n\n🚫 Non generare codice o script di programmazione\n\n🔚 Al termine, scrivi sempre:\n✅ Output completato – in attesa del Prompt 3",
-  tags: ['P2']
-},
- {
-  id: 'se3',
-  title: 'Simulatore Elettrico – Confronto & Simulazione Risparmio',
-  category: 'Simulatore Elettrico',
-  description:
-    'Confronta la fornitura attuale con le offerte a portafoglio e calcola il risparmio stimato per il cliente.',
-  text:
-    "🔹 Prompt 3 – Confronto & Simulazione Risparmio\n\n🎯 Obiettivo\nConfrontare la fornitura attuale con le offerte a portafoglio e calcolare il risparmio stimato.\n\n📥 Input richiesto\n• Dati estratti dalla fattura (Prompt 1)\n• File Excel Riepilogo CTE standard.xlsx (Prompt 2)\n\n🧰 Attività richieste\n1. Recupero PUN GME:\n   o Usa il valore €/kWh del mese (o media ponderata se più mesi)\n   o Recupera dal sito GME\n   o Se non reperibile → chiedi all’utente\n\n2. Calcolo spesa attuale:\n   o Σ [kWh_fascia × prezzo_fascia da bolletta] + PCV\n   o ➕ Dispacciamento + Sbilanciamento presi direttamente dalla fattura\n\n3. Calcolo spesa offerte alternative:\n   o Applica Formula_Tariffaria del Prompt 2\n   o Usa Prezzi Lordo Perdite dal CTE (già inclusivi delle perdite)\n   o Includi sempre: PCV, quota energia, quota fissa/variabile\n\n4. Comparazione e ranking:\n   o Calcola spesa mensile e annua\n   o Determina risparmio mensile e annuo\n   o Ordina offerte per risparmio annuo decrescente\n   o Escludi offerte non valutabili, spiegando il motivo\n\n📤 Output atteso\n• Tabella in chat con colonne: Nome Offerta | Tipo Prezzo | Spesa Attuale Mensile/Annua | Spesa Offerta Mensile/Annua | Risparmio Mensile/Annuale | Durata | Note\n• File Excel “Confronto_offerte_risparmio.xlsx” con le stesse colonne\n• Sintesi finale in 5 righe: offerta consigliata, risparmio stimato, motivi principali, vincoli, prossimo step\n\n🚫 Non generare codice o script di programmazione\n\n🔚 Al termine, scrivi sempre:\n✅ Output completato – in attesa del Prompt 4",
-  tags: ['P3']
-},
+    id: 'se2',
+    title: 'Simulatore Elettrico – Analizzatore Offerte (Excel)',
+    category: 'Simulatore Elettrico',
+    description: 'Pulizia e standardizzazione offerte da Excel (Riepilogo CTE) per l’analisi comparativa.',
+    text:
+      "🔹 Prompt 2 – Analisi Offerte da Excel (Riepilogo CTE)\n🎯 Obiettivo\nPulire, standardizzare e preparare le offerte commerciali dal file Excel per l’analisi comparativa.\n📥 Input richiesto\n• File Excel Riepilogo CTE (struttura costante)\n🧰 Attività richieste\n1. Pre-elaborazione file:\n  o Rimuovi merge e intestazioni multiple\n  o Assegna a ogni colonna un nome chiaro e univoco\n2. Standardizza le colonne principali:\n  o Nome_Offerta\n  o Tipo_Prezzo (TReND, FIX, MIX, ABB+PUN, PUN)\n  o PCV_mensile\n  o Durata_mesi\n  o Validità_DAL, Validità_AL\n  o Prezzi Lordo Perdite (F1, F2, F3)\n  o Note/Vincoli\n3. Formula_Tariffaria (compatta):\n  o TReND/PUN = PCV + (PUN + Prezzo_Lordo_Perdite) × kWh\n  o FIX = PCV + Prezzo fisso × kWh\n  o MIX = Quota Fissa % × Prezzo fisso + Quota Variabile % × (PUN+α)\n  o ABB+PUN = Abbonamento + PUN × kWh\n  o Se PCV=0 → offerta senza quota fissa\n4. Flag diagnostici:\n  o Valutabile\n  o Motivo_Non_Valutabile\n  o PCV_zero\n  o Richiede_PUN\n  o Formula_validata\n📤 Output atteso\n• Tabella con offerte strutturate e flag\n• Salva file come “Riepilogo CTE standard.xlsx”\n• Conferma in chat quante offerte sono valutabili\n🚫 Non generare codice o script di programmazione\n🔚 Al termine, scrivi sempre:\n✅ Output completato – in attesa del Prompt 3",
+    tags: ['2']
+  },
   {
-  id: 'se4',
-  title: 'Simulatore Elettrico – Report Consulenziale',
-  category: 'Simulatore Elettrico',
-  description: 'Genera un report chiaro e professionale per il cliente sulla base del confronto eseguito.',
-  text:
-    "🔹 Prompt 4 – Report Consulenziale\n\n🎯 Obiettivo\nGenerare un report chiaro e professionale per il cliente sulla base del confronto eseguito.\n\n📥 Input richiesto\n• Tabella comparativa dal Prompt 3\n\n🧰 Attività richieste\n• Identifica offerta più conveniente\n• Indica risparmio stimato (mensile e annuo)\n• Elenca miglioramenti contrattuali\n• Evidenzia rischi o vincoli\n• Suggerisci azioni successive\n\n📤 Output atteso\n• Report in 3–4 paragrafi, tono professionale e leggibile per decisori non tecnici, con:\n  • Offerta consigliata e risparmio stimato\n  • Vantaggi contrattuali\n  • Rischi/vincoli\n  • Next step operativo (e scadenze)\n• Tabella riepilogativa: Nome Offerta | Spesa Annua | Risparmio | Vantaggi | Vincoli | Raccomandazione\n\n🚫 Non generare codice o script di programmazione\n\n🔚 Al termine, scrivi sempre:\n✅ Output completato – simulazione completata",
-  tags: ['P4']
-},
+    id: 'se3',
+    title: 'Simulatore Elettrico – Confronto & Risparmio',
+    category: 'Simulatore Elettrico',
+    description: 'Confronta fornitura attuale vs offerte e calcola risparmio stimato.',
+    text:
+      "🔹 Prompt 3 – Confronto & Simulazione Risparmio\n🎯 Obiettivo\nConfrontare la fornitura attuale con le offerte a portafoglio e calcolare il risparmio stimato.\n📥 Input richiesto\n• Dati estratti dalla fattura (Prompt 1)\n• File Excel Riepilogo CTE standard.xlsx (Prompt 2)\n🧰 Attività richieste\n1. Recupero PUN GME:\n  o Usa il valore €/kWh del mese (o media ponderata se più mesi)\n  o Recupera dal sito GME\n  o Se non reperibile → chiedi all’utente\n2. Calcolo spesa attuale:\n  o Σ [kWh_fascia × prezzo_fascia da bolletta] + PCV\n  o ➕ Dispacciamento + Sbilanciamento presi direttamente dalla fattura\n3. Calcolo spesa offerte alternative:\n  o Applica Formula_Tariffaria del Prompt 2\n  o Usa Prezzi Lordo Perdite dal CTE (già inclusivi delle perdite)\n  o Includi sempre: PCV, quota energia, quota fissa/variabile\n4. Comparazione e ranking:\n  o Calcola spesa mensile e annua\n  o Determina risparmio mensile e annuo\n  o Ordina offerte per risparmio annuo decrescente\n  o Escludi offerte non valutabili, spiegando il motivo\n📤 Output atteso\n• Tabella in chat con colonne: Nome Offerta | Tipo Prezzo | Spesa Attuale Mensile/Annua | Spesa Offerta Mensile/Annua | Risparmio Mensile/Annuale | Durata | Note\n• File Excel “Confronto_offerte_risparmio.xlsx” con le stesse colonne\n• Sintesi finale in 5 righe: offerta consigliata, risparmio stimato, motivi principali, vincoli, prossimo step\n🚫 Non generare codice o script di programmazione\n🔚 Al termine, scrivi sempre:\n✅ Output completato – in attesa del Prompt 4",
+    tags: ['3']
+  },
+  {
+    id: 'se4',
+    title: 'Simulatore Elettrico – Report Consulenziale',
+    category: 'Simulatore Elettrico',
+    description: 'Genera un report chiaro e professionale per il cliente sulla base del confronto eseguito.',
+    text:
+      "🔹 Prompt 4 – Report Consulenziale\n\n🎯 Obiettivo\nGenerare un report chiaro e professionale per il cliente sulla base del confronto eseguito.\n\n📥 Input richiesto\n• Tabella comparativa dal Prompt 3\n\n🧰 Attività richieste\n• Identifica offerta più conveniente\n• Indica risparmio stimato (mensile e annuo)\n• Elenca miglioramenti contrattuali\n• Evidenzia rischi o vincoli\n• Suggerisci azioni successive\n\n📤 Output atteso\n• Report in 3–4 paragrafi, tono professionale e leggibile per decisori non tecnici, con:\n  • Offerta consigliata e risparmio stimato\n  • Vantaggi contrattuali\n  • Rischi/vincoli\n  • Next step operativo (e scadenze)\n• Tabella riepilogativa: Nome Offerta | Spesa Annua | Risparmio | Vantaggi | Vincoli | Raccomandazione\n\n🚫 Non generare codice o script di programmazione\n\n🔚 Al termine, scrivi sempre:\n✅ Output completato – simulazione completata",
+    tags: ['4']
+  },
+
   {
     id: 'fv1',
     title: 'Preventivatore FV – Pre-preventivo',
@@ -90,15 +90,17 @@ const DEFAULT_PROMPTS = [
     text:
       'Genera un pre-preventivo fotovoltaico per [azienda B2B]. L\'utente fornirà: consumi annui per fasce, superficie, località, tipologia pannello, costi unitari, ecc. Il sistema deve calcolare costi, produzione, autoconsumo, risparmio, ROI, incentivi 2025, grafico scenari (base, accumulo, accumulo+colonnina), numero pannelli, report PDF scaricabile, salvataggio dati.'
   },
+
+  /* ===== Lettura Consumi Next (aggiornato) ===== */
   {
-  id: 'lc1',
-  title: 'Lettura Consumi Next – Analisi fasce',
-  category: 'Lettura Consumi Next',
-  description:
-    'Estrai e analizza i consumi mensili distinguendo letture progressive vs consumi reali. Tabella + grafici.',
-  text:
-    "🔹 Analisi Consumi/Letture Next \n\n🎯 Obiettivo\nEstrarre e analizzare i consumi elettrici mensili da file Excel, distinguendo automaticamente tra letture progressive e consumi reali. Restituire tabella riepilogativa + grafici.\n\n📥 Input richiesto\n• File Excel con colonne:\n\nPeriodo (colonna A)\n\nConsumo F1 (kWh) (colonna F)\n\nConsumo F2 (kWh) (colonna G)\n\nConsumo F3 (kWh) (colonna H)\n\nPotenza massima (kW) (colonna AJ)\n\n🧠 Attività da svolgere\n\nPre-processing\n\nConverti eventuali valori testo → numerici.\n\nIgnora righe vuote o con valori anomali.\n\nSe tutti i valori F1/F2/F3 = 0 → escludi il mese.\n\nDistinzione Consumi vs Letture\n\nSe i valori mensili crescono in modo costante senza oscillazioni → considera letture progressive → calcola il consumo del mese = differenza tra mese corrente e precedente.\n\nSe i valori oscillano (in aumento o diminuzione) → considera consumi reali → usa i valori così come sono.\n\nCalcoli richiesti\n\nConsumo mensile per fascia (F1, F2, F3).\n\nConsumo totale mensile = F1+F2+F3.\n\nPotenza massima mensile (riportata dalla colonna AJ).\n\nRiepilogo annuo:\n• Totale F1, F2, F3 e totale complessivo (in kWh e in MWh).\n• % di ciascuna fascia sul totale.\n• Potenza massima annua = valore massimo fra i mesi.\n\n📤 Output atteso\n\nTabella riepilogativa mensile con colonne:\nPeriodo | F1 (kWh) | F2 (kWh) | F3 (kWh) | Totale mensile (kWh) | Potenza max (kW)\n\nuna riga finale di riepilogo con Totale annuo (MWh) e % per fascia.\n\nGrafico:\n\nA linee o barre con consumi mensili suddivisi per fascia + totale.\n\nSintesi testuale chiara:\n\nConsumi annui totali (MWh).\n\nRipartizione % F1, F2, F3.\n\nPotenza massima riscontrata.\n\nEvidenzia se i dati erano letture progressive o consumi reali.\n\n⚠️ Guardrail\n\nNon generare codice o script.\n\nSe un dato non è disponibile, scrivi “Non reperito / Da verificare”.\n\n🔚 Chiusura\n✅ Output completato – analisi terminata."
-},
+    id: 'lc1',
+    title: 'Lettura Consumi Next – Analisi fasce',
+    category: 'Lettura Consumi Next',
+    description: 'Estrai e analizza i consumi mensili distinguendo letture progressive vs consumi reali. Tabella + grafici.',
+    text:
+      "🔹 Analisi Consumi/Letture Next \n\n🎯 Obiettivo\nEstrarre e analizzare i consumi elettrici mensili da file Excel, distinguendo automaticamente tra letture progressive e consumi reali. Restituire tabella riepilogativa + grafici.\n\n📥 Input richiesto\n• File Excel con colonne:\n\nPeriodo (colonna A)\n\nConsumo F1 (kWh) (colonna F)\n\nConsumo F2 (kWh) (colonna G)\n\nConsumo F3 (kWh) (colonna H)\n\nPotenza massima (kW) (colonna AJ)\n\n🧠 Attività da svolgere\n\nPre-processing\n\nConverti eventuali valori testo → numerici.\n\nIgnora righe vuote o con valori anomali.\n\nSe tutti i valori F1/F2/F3 = 0 → escludi il mese.\n\nDistinzione Consumi vs Letture\n\nSe i valori mensili crescono in modo costante senza oscillazioni → considera letture progressive → calcola il consumo del mese = differenza tra mese corrente e precedente.\n\nSe i valori oscillano (in aumento o diminuzione) → considera consumi reali → usa i valori così come sono.\n\nCalcoli richiesti\n\nConsumo mensile per fascia (F1, F2, F3).\n\nConsumo totale mensile = F1+F2+F3.\n\nPotenza massima mensile (riportata dalla colonna AJ).\n\nRiepilogo annuo:\n• Totale F1, F2, F3 e totale complessivo (in kWh e in MWh).\n• % di ciascuna fascia sul totale.\n• Potenza massima annua = valore massimo fra i mesi.\n\n📤 Output atteso\n\nTabella riepilogativa mensile con colonne:\nPeriodo | F1 (kWh) | F2 (kWh) | F3 (kWh) | Totale mensile (kWh) | Potenza max (kW)\n\nuna riga finale di riepilogo con Totale annuo (MWh) e % per fascia.\n\nGrafico:\n\nA linee o barre con consumi mensili suddivisi per fascia + totale.\n\nSintesi testuale chiara:\n\nConsumi annui totali (MWh).\n\nRipartizione % F1, F2, F3.\n\nPotenza massima riscontrata.\n\nEvidenzia se i dati erano letture progressive o consumi reali.\n\n⚠️ Guardrail\n\nNon generare codice o script.\n\nSe un dato non è disponibile, scrivi “Non reperito / Da verificare”.\n\n🔚 Chiusura\n✅ Output completato – analisi terminata."
+  },
+
   {
     id: 'nf1',
     title: 'Negoziazione – Follow-up cliente',
@@ -118,7 +120,7 @@ const DEFAULT_PROMPTS = [
       'Crea una e-mail post installazione per ringraziare il cliente, offrire assistenza e richiedere feedback.'
   },
 
-  /* ===== Nuova categoria: Analisi di Mercato ===== */
+  /* ===== Analisi di Mercato ===== */
   {
     id: 'm1',
     title: 'Report Energia B2B – Report Completo',
@@ -145,6 +147,17 @@ const DEFAULT_PROMPTS = [
     text:
       "Agisci come un analista energetico B2B.\nGenera un market alert sintetico sul mercato energia elettrica e gas in Italia basandoti su fonti ufficiali e autorevoli (ARERA, Terna, GME, GSE, Eurostat, IEA, Ministero Ambiente/Energia).\n\nRiassumi in 3 bullet point massimo:\n• Andamento prezzi luce e gas rispetto alla settimana precedente\n• Novità o eventi critici (mercato, geopolitica, normative) che impattano i costi\n• Raccomandazione pratica immediata per aziende B2B (PMI e grandi imprese)\n\nStile: chiaro, incisivo, pronto per un messaggio breve.",
     tags: ['Perplexity']
+  },
+
+  /* ===== Nuovo: Generatore di Prompt ===== */
+  {
+    id: 'gp1',
+    title: 'Generatore di Prompt',
+    category: 'Generatore di Prompt',
+    description:
+      'Assistente per creare prompt ottimali con revisione, suggerimenti e domande iterative.',
+    text:
+      "Voglio che tu diventi il mio Creatore di Prompt personale.\n \nIl tuo obiettivo è aiutarmi a creare il miglior prompt possibile per le mie esigenze. I prompt saranno utilizzati da te, Copilot.\n \nDovrai seguire alla lettera il processo seguente.\n \nLa tua prima risposta sarà chiedermi di cosa dovrebbe trattare il prompt. Fornirò la mia risposta, ma dovremo migliorarla attraverso iterazioni continue passando attraverso i passaggi successivi.\n \nLa tua risposta dovrà quindi essere costituita da 3 sezioni:\n \nA.) Rivedi il prompt (fornisci il tuo prompt riscritto). Dovrebbe essere chiaro, conciso e facilmente compreso da te. \nB.) Suggerimenti (forniscimi dei suggerimenti riguardo quali dettagli includere nei prompt per migliorarli.) \nC.) Domande (fai domande pertinenti relative a quale informazione aggiuntiva migliorerebbe il prompt)"
   }
 ];
 
@@ -193,6 +206,7 @@ export default function Page() {
 
   const fileInputRef = useRef(null);
 
+  /* ===== Bootstrap ===== */
   useEffect(() => {
     try {
       const savedFavs = sessionStorage.getItem('promptFavorites');
@@ -208,6 +222,7 @@ export default function Page() {
     } catch {}
   }, []);
 
+  // auto-apri disclaimer alla prima visita
   useEffect(() => {
     try {
       const accepted = localStorage.getItem(DISCLAIMER_KEY) === '1';
@@ -215,6 +230,7 @@ export default function Page() {
     } catch {}
   }, []);
 
+  // ESC chiude modali
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === 'Escape') {
@@ -295,6 +311,7 @@ export default function Page() {
     try { document.body.style.overflow = ''; } catch {}
   }
 
+  /* ===== Import .docx (solo Admin) ===== */
   const handleDocx = async (file) => {
     try {
       showToast('Caricamento file in corso...');
@@ -363,6 +380,7 @@ export default function Page() {
     return out;
   }
 
+  /* ===== Admin ===== */
   function openAdmin() {
     setAdminPass('');
     setAdminError('');
@@ -379,6 +397,7 @@ export default function Page() {
     }
   }
 
+  /* ===== Reset Libreria (solo Admin) ===== */
   function resetLibrary() {
     if (!isAdmin) return;
     const ok = window.confirm('Ripristinare la libreria ai prompt di default? I prompt importati localmente verranno rimossi.');
@@ -392,6 +411,7 @@ export default function Page() {
     showToast('Libreria ripristinata ai prompt di default.');
   }
 
+  /* ===== Disclaimer ===== */
   function openDisclaimer() { setDisclaimerOpen(true); }
   function acceptDisclaimer() {
     try { localStorage.setItem(DISCLAIMER_KEY, '1'); } catch {}
@@ -409,8 +429,10 @@ export default function Page() {
     marginLeft: 6
   };
 
+  /* ===================== RENDER ===================== */
   return (
     <>
+      {/* Header */}
       <header className="header">
         <div className="container">
           <div className="header-content">
@@ -501,12 +523,14 @@ export default function Page() {
                 <option value="Negoziazione/Follow-up">Negoziazione/Follow-up</option>
                 <option value="Gestione Customer Base">Gestione Customer Base</option>
                 <option value="Analisi di Mercato">Analisi di Mercato</option>
+                <option value="Generatore di Prompt">Generatore di Prompt</option>
               </select>
             </div>
           </div>
         </div>
       </header>
 
+      {/* Main */}
       <main className="main">
         <div className="container">
           <div id="prompts-grid" className="prompts-grid">
@@ -570,6 +594,7 @@ export default function Page() {
         </div>
       </main>
 
+      {/* Modale Dettagli */}
       {modalOpen && activePrompt && (
         <div
           className="modal-backdrop"
@@ -605,6 +630,7 @@ export default function Page() {
         </div>
       )}
 
+      {/* Modale Admin */}
       {adminModalOpen && (
         <div
           className="modal-backdrop"
@@ -640,6 +666,7 @@ export default function Page() {
         </div>
       )}
 
+      {/* Modale Disclaimer */}
       {disclaimerOpen && (
         <div
           className="modal-backdrop"
@@ -670,6 +697,7 @@ export default function Page() {
         </div>
       )}
 
+      {/* Footer */}
       <footer className="footer">
         <div className="container" style={{ display: 'flex', justifyContent: 'center', gap: 12, alignItems: 'center' }}>
           <p style={{ margin: 0 }}>Realizzato con ❤️ da <strong>Alfredo Palermi</strong></p>
@@ -685,6 +713,7 @@ export default function Page() {
         </div>
       </footer>
 
+      {/* Toast */}
       <div id="toast" className={`toast ${toastVisible ? 'show' : ''}`} role="alert" aria-live="polite">
         <span id="toast-message">{toastMsg}</span>
       </div>

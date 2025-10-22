@@ -7,7 +7,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 const DEFAULT_PROMPTS = [
   {
     id: 's1',
-    title: 'Scouting – Elenco aziende B2B',
+    title: 'Elenco aziende B2B',
     category: 'Scouting',
     description:
       'Genera un elenco dettagliato di aziende B2B nel settore scelto e nella provincia indicata, con filtri su dipendenti e output in Excel.',

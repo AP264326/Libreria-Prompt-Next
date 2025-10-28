@@ -100,7 +100,6 @@ const DEFAULT_PROMPTS = [
     tags: ['P4']
   },
 
-   /* ===== Preventivatore – Simulatore Beyond Commodity ===== */
   {
     id: 'fv1',
     title: 'Preventivatore FV – Pre-preventivo',

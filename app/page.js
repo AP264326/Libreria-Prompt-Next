@@ -99,7 +99,6 @@ const DEFAULT_PROMPTS = [
       "🔹 Prompt 4 – Report Consulenziale\n\n🎯 Obiettivo\nGenerare un report chiaro e professionale per il cliente sulla base del confronto eseguito.\n\n📥 Input richiesto\n• Tabella comparativa dal Prompt 3\n\n🧰 Attività richieste\n• Identifica offerta più conveniente\n• Indica risparmio stimato (mensile e annuo)\n• Elenca miglioramenti contrattuali\n• Evidenzia rischi o vincoli\n• Suggerisci azioni successive\n\n📤 Output atteso\n• Report in 3–4 paragrafi, tono professionale e leggibile per decisori non tecnici, con:\n  • Offerta consigliata e risparmio stimato\n  • Vantaggi contrattuali\n  • Rischi/vincoli\n  • Next step operativo (e scadenze)\n• Tabella riepilogativa: Nome Offerta | Spesa Annua | Risparmio | Vantaggi | Vincoli | Raccomandazione\n\n🚫 Non generare codice o script di programmazione\n\n🔚 Al termine, scrivi sempre:\n✅ Output completato – simulazione completata",
     tags: ['P4']
   },
-
   {
     id: 'fv1',
     title: 'Preventivatore FV – Pre-preventivo',

@@ -102,7 +102,7 @@ const DEFAULT_PROMPTS = [
 
   {
     id: 'fv1',
-    title: 'Simulatore Preventivatore FV – Pre-preventivo',
+    title: 'Preventivatore FV – Pre-preventivo',
     category: 'Preventivatore – Simulatore FV',
     description: 'Calcola pre-preventivo fotovoltaico con scenari e ROI.',
     text:
@@ -110,12 +110,12 @@ const DEFAULT_PROMPTS = [
   },
   {
   id: 'fv2',
-  title: 'Simulatore Pre-Preventivatore FV + Storage (B2B)',
+  title: 'Pre-Preventivatore FV + Storage (B2B)',
   category: 'Preventivatore - Simulatore FV',
   description: 'Stima economica e ambientale di un impianto FV con e senza storage: risparmi, payback, CO₂ evitata, alberi equivalenti.',
   text:
     "🔹 Prompt – Pre-Preventivatore FV + Storage (B2B)\n\n🎯 Ruolo\nAgisci come consulente energetico B2B. Fornisci una stima rapida e affidabile della convenienza economica e ambientale di un impianto fotovoltaico con e senza storage, basandoti sui dati della fattura del cliente e, se necessario, su parametri standard di mercato.\nTono: semplice, professionale, orientato al cliente.\n\n📥 Input prioritari (da fattura)\n• Consumo annuo elettrico (kWh)\n• Prezzo energia attuale (€/kWh)\n• Spesa annua totale (€)\n• Zona geografica: Nord | Centro | Sud\n\nSe un dato manca:\n– Chiedilo all’utente\n– Se non disponibile, usa valori standard\n\n📊 Parametri standard (se non forniti)\n• Produzione media FV → Nord: 1.100 kWh/kWp | Centro: 1.300 | Sud: 1.500\n• Costo impianto FV → 1.100 €/kWp\n• Costo storage → 500 €/kWh\n• CO₂ evitata → 0,233 kg/kWh\n• Alberi equivalenti → 20 kg CO₂/albero/anno\n• Autoconsumo FV → 65%\n• Autoconsumo FV+Storage → 80%\n• Target copertura fabbisogno → 70%\n• Dimensionamento storage → 0,8 kWh per ogni kWp FV\n\n🧮 Calcoli richiesti\n1️⃣ Dimensionamento FV (kWp) = (Consumo annuo × 70%) ÷ rendimento zona\n2️⃣ Produzione FV stimata (kWh) = kWp × rendimento zona\n3️⃣ Autoconsumo → FV = 65% | FV+Storage = 80%\n4️⃣ Spesa attuale = Consumo annuo × Prezzo energia\n5️⃣ Risparmio annuo:\n   • FV = Autoconsumo × Prezzo energia\n   • FV+Storage = Autoconsumo × Prezzo energia\n6️⃣ Investimento:\n   • FV = kWp × 1.100 €\n   • FV+Storage = FV + (kWp × 0,8 × 500 €)\n7️⃣ Payback = Investimento ÷ Risparmio annuo\n8️⃣ CO₂ evitata (ton) = Autoconsumo × 0,233 ÷ 1.000\n9️⃣ Alberi equivalenti = CO₂_kg ÷ 20\n\n📋 Output richiesto\n1️⃣ **KPI sintetici**\n\n| KPI | FV | FV+Storage |\n| --- | --- | --- |\n| Investimento iniziale (€) | XXXX | XXXX |\n| Risparmio annuo (€) | XXXX | XXXX |\n| Payback (anni) | X.X | X.X |\n| CO₂ evitata (ton) | X.X | X.X |\n| Alberi equivalenti | XXX | XXX |\n\n2️⃣ **Tabella comparativa**\n\n| Scenario | Produzione FV (kWh) | Spesa attuale (€) | Spesa con FV (€) | Risparmio (€) | Payback (anni) |\n| --- | --- | --- | --- | --- | --- |\n| Attuale | – | €XXX | – | – | – |\n| FV | YYY | €XXX | €ZZZ | €… | X.X |\n| FV+Storage | YYY | €XXX | €ZZZ | €… | X.X |\n\n3️⃣ **Pitch commerciale (max 2 frasi)**\n“Con il FV puoi ridurre la bolletta del X% e abbattere le emissioni di Y ton CO₂ (pari a Z alberi/anno).”\n“L’investimento si ripaga in W anni: da lì in poi il risparmio è netto.”\n\n4️⃣ **Nota Assunzioni**\nIndica:\n• Zona geografica\n• Rendimento FV usato\n• Target copertura fabbisogno\n• Autoconsumo FV e FV+Storage\n• Costi standard impianto e storage\n• Fattore CO₂ evitata\n• Conversione alberi equivalenti\n\n✅ Regole di presentazione\n• Stile semplice, numeri chiave in evidenza\n• Arrotondamenti:\n  – kWp → 1 decimale\n  – kWh → intero\n  – € → intero\n  – Payback → 1 decimale\n• Se un dato manca → “Non reperibile”\n• Se risparmio ≤ 0 → “Payback non calcolabile”
-  },
+    },
 
   /* ===== Lettura Consumi Next (aggiornato) ===== */
   {

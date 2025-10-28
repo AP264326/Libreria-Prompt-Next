@@ -110,7 +110,7 @@ const DEFAULT_PROMPTS = [
   },
   {
   id: 'fv2',
-  title: 'Simulatore Pre-Preventivatore FV + Storage (B2B)',
+  title: 'Pre-Preventivatore FV + Storage (B2B)',
   category: 'Preventivatore Simulatore FV',
   description: 'Stima economica e ambientale di un impianto FV con e senza storage: risparmi, payback, CO₂ evitata, alberi equivalenti.',
   text:

@@ -102,7 +102,7 @@ const DEFAULT_PROMPTS = [
 
   {
     id: 'fv1',
-    title: 'Preventivatore FV – Pre-preventivo',
+    title: 'Simulatore Preventivatore FV – Pre-preventivo',
     category: 'Preventivatore – Simulatore FV',
     description: 'Calcola pre-preventivo fotovoltaico con scenari e ROI.',
     text:
@@ -110,7 +110,7 @@ const DEFAULT_PROMPTS = [
   },
   {
   id: 'fv2',
-  title: 'Pre-Preventivatore FV + Storage (B2B)',
+  title: 'Simulatore Pre-Preventivatore FV + Storage (B2B)',
   category: 'Preventivatore - Simulatore FV',
   description: 'Stima economica e ambientale di un impianto FV con e senza storage: risparmi, payback, CO₂ evitata, alberi equivalenti.',
   text:

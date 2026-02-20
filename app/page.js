@@ -372,7 +372,7 @@ export default function Page() {
     );
     
     if (missingFields.length > 0) {
-      showToast(`⚠️ Compila tutti i campi: ${missingFields.map(v => v.label).join(', ')}`);
+      showToast(`⚠️ Compila tutti i campi per copiare la versione personalizzata: ${missingFields.map(v => v.label).join(', ')}`);
       return;
     }
     
@@ -393,21 +393,28 @@ export default function Page() {
     }
   };
 
-  // 🆕 Funzione per mostrare l'anteprima
+  // 🆕 Funzione per copiare il prompt ORIGINALE (con placeholder)
+  const copyOriginalPrompt = async () => {
+    if (!currentPromptForVars) return;
+    
+    try {
+      await navigator.clipboard.writeText(currentPromptForVars.text);
+      showToast('✅ Prompt originale copiato! Modifica i placeholder nell\'AI.');
+      setVariablesModalOpen(false);
+      setCurrentPromptForVars(null);
+      setVariableValues({});
+      setShowPreview(false);
+      setPreviewText('');
+    } catch {
+      showToast('❌ Errore durante la copia.');
+    }
+  };
+
+  // 🆕 Funzione per mostrare l'anteprima (ora SENZA controllo obbligatorio)
   const showPromptPreview = () => {
     if (!currentPromptForVars) return;
     
-    // Verifica che tutti i campi siano compilati
-    const missingFields = currentPromptForVars.variables.filter(
-      v => !variableValues[v.name] || variableValues[v.name].trim() === ''
-    );
-    
-    if (missingFields.length > 0) {
-      showToast(`⚠️ Compila tutti i campi prima di vedere l'anteprima: ${missingFields.map(v => v.label).join(', ')}`);
-      return;
-    }
-    
-    // Genera il testo con le variabili sostituite
+    // Genera il testo con le variabili sostituite (o con placeholder se vuoti)
     const finalText = replaceVariables(currentPromptForVars.text, variableValues);
     setPreviewText(finalText);
     setShowPreview(true);
@@ -417,7 +424,7 @@ export default function Page() {
   const copyFromPreview = async () => {
     try {
       await navigator.clipboard.writeText(previewText);
-      showToast('✅ Prompt personalizzato copiato negli appunti!');
+      showToast('✅ Prompt copiato negli appunti!');
       setVariablesModalOpen(false);
       setCurrentPromptForVars(null);
       setVariableValues({});
@@ -880,18 +887,18 @@ export default function Page() {
                     border: '2px solid rgba(16, 185, 129, 0.3)'
                   }}>
                     <p style={{ fontSize: 14, color: '#10b981', margin: 0, fontWeight: '600', marginBottom: 6 }}>
-                      ℹ️ Come funziona
+                      ℹ️ Prompt con campi personalizzabili
                     </p>
                     <p style={{ fontSize: 13, color: '#cbd5e1', margin: 0, lineHeight: 1.5 }}>
-                      Compila {currentPromptForVars.variables.length === 1 ? 'il campo qui sotto' : `i ${currentPromptForVars.variables.length} campi qui sotto`} con le tue informazioni. 
-                      Puoi <strong>copiare direttamente</strong> o vedere l'<strong>anteprima</strong> per modificarlo prima.
+                      Questo prompt ha {currentPromptForVars.variables.length} {currentPromptForVars.variables.length === 1 ? 'campo' : 'campi'} personalizzabili. 
+                      Puoi <strong>compilarli per personalizzarlo</strong>, oppure <strong>copiare l'originale</strong> e modificarlo nell'AI.
                     </p>
                   </div>
                   
                   {currentPromptForVars.variables.map(variable => (
                     <div key={variable.name} style={{ marginBottom: 16 }}>
                       <label className="form-label" htmlFor={`var-${variable.name}`}>
-                        {variable.label} <span style={{ color: '#ef4444' }}>*</span>
+                        {variable.label} <span style={{ color: '#10b981', fontSize: '12px', fontWeight: 'normal' }}>(facoltativo)</span>
                       </label>
                       <input
                         id={`var-${variable.name}`}
@@ -903,7 +910,6 @@ export default function Page() {
                           [variable.name]: e.target.value
                         })}
                         placeholder={variable.placeholder}
-                        required
                       />
                     </div>
                   ))}
@@ -916,7 +922,7 @@ export default function Page() {
                     border: '1px solid rgba(59, 130, 246, 0.3)'
                   }}>
                     <p style={{ fontSize: 13, color: '#93c5fd', margin: 0 }}>
-                      💡 <strong>Tip:</strong> Usa "Anteprima" per vedere e modificare il prompt prima di copiarlo, oppure "Copia e chiudi" per un workflow veloce.
+                      💡 <strong>3 opzioni:</strong> Copia l'originale (con placeholder), copia la versione personalizzata, o vedi l'anteprima per modificarlo.
                     </p>
                   </div>
                 </>
@@ -970,28 +976,36 @@ export default function Page() {
               )}
             </div>
 
-            <div className="modal__actions">
+            <div className="modal__actions" style={{ flexWrap: 'wrap', gap: '8px' }}>
               {!showPreview ? (
-                // Bottoni quando è in modalità FORM
+                // Bottoni quando è in modalità FORM - TRE OPZIONI
                 <>
-                  <button className="btn-blue" onClick={showPromptPreview} style={{ background: '#3b82f6' }}>
+                  <button 
+                    className="btn-blue btn-ghost" 
+                    onClick={copyOriginalPrompt}
+                    style={{ flex: '1 1 100%', minWidth: '200px' }}
+                  >
+                    📄 Copia originale
+                  </button>
+                  <button 
+                    className="btn-blue" 
+                    onClick={copyWithVariables}
+                    style={{ flex: '1 1 calc(50% - 4px)', minWidth: '150px' }}
+                  >
+                    📋 Copia personalizzato
+                  </button>
+                  <button 
+                    className="btn-blue" 
+                    onClick={showPromptPreview} 
+                    style={{ flex: '1 1 calc(50% - 4px)', minWidth: '150px', background: '#3b82f6' }}
+                  >
                     👁️ Anteprima
-                  </button>
-                  <button className="btn-blue" onClick={copyWithVariables}>
-                    📋 Copia e chiudi
-                  </button>
-                  <button className="btn-blue btn-ghost" onClick={() => {
-                    setVariablesModalOpen(false);
-                    setShowPreview(false);
-                    setPreviewText('');
-                  }}>
-                    Annulla
                   </button>
                 </>
               ) : (
                 // Bottoni quando è in modalità ANTEPRIMA
                 <>
-                  <button className="btn-blue" onClick={() => setShowPreview(false)}>
+                  <button className="btn-blue btn-ghost" onClick={() => setShowPreview(false)}>
                     ← Modifica campi
                   </button>
                   <button className="btn-blue" onClick={copyFromPreview} style={{ background: '#10b981' }}>

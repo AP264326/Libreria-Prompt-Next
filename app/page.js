@@ -243,6 +243,8 @@ export default function Page() {
   const [variablesModalOpen, setVariablesModalOpen] = useState(false);
   const [currentPromptForVars, setCurrentPromptForVars] = useState(null);
   const [variableValues, setVariableValues] = useState({});
+  const [showPreview, setShowPreview] = useState(false);
+  const [previewText, setPreviewText] = useState('');
 
   const [isAdmin, setIsAdmin] = useState(false);
   const [adminModalOpen, setAdminModalOpen] = useState(false);
@@ -380,10 +382,47 @@ export default function Page() {
     // Copia negli appunti
     try {
       await navigator.clipboard.writeText(finalText);
-      showToast('✅ Prompt personalizzato copiato!');
+      showToast('✅ Prompt personalizzato copiato negli appunti!');
       setVariablesModalOpen(false);
       setCurrentPromptForVars(null);
       setVariableValues({});
+      setShowPreview(false);
+      setPreviewText('');
+    } catch {
+      showToast('❌ Errore durante la copia.');
+    }
+  };
+
+  // 🆕 Funzione per mostrare l'anteprima
+  const showPromptPreview = () => {
+    if (!currentPromptForVars) return;
+    
+    // Verifica che tutti i campi siano compilati
+    const missingFields = currentPromptForVars.variables.filter(
+      v => !variableValues[v.name] || variableValues[v.name].trim() === ''
+    );
+    
+    if (missingFields.length > 0) {
+      showToast(`⚠️ Compila tutti i campi prima di vedere l'anteprima: ${missingFields.map(v => v.label).join(', ')}`);
+      return;
+    }
+    
+    // Genera il testo con le variabili sostituite
+    const finalText = replaceVariables(currentPromptForVars.text, variableValues);
+    setPreviewText(finalText);
+    setShowPreview(true);
+  };
+
+  // 🆕 Funzione per copiare dall'anteprima
+  const copyFromPreview = async () => {
+    try {
+      await navigator.clipboard.writeText(previewText);
+      showToast('✅ Prompt personalizzato copiato negli appunti!');
+      setVariablesModalOpen(false);
+      setCurrentPromptForVars(null);
+      setVariableValues({});
+      setShowPreview(false);
+      setPreviewText('');
     } catch {
       showToast('❌ Errore durante la copia.');
     }
@@ -829,63 +868,144 @@ export default function Page() {
             </div>
 
             <div className="modal__body" style={{ paddingTop: 16 }}>
-              {/* Messaggio informativo principale */}
-              <div style={{ 
-                marginBottom: 20, 
-                padding: 14, 
-                background: 'rgba(16, 185, 129, 0.1)', 
-                borderRadius: 8,
-                border: '2px solid rgba(16, 185, 129, 0.3)'
-              }}>
-                <p style={{ fontSize: 14, color: '#10b981', margin: 0, fontWeight: '600', marginBottom: 6 }}>
-                  ℹ️ Prompt personalizzabile
-                </p>
-                <p style={{ fontSize: 13, color: '#cbd5e1', margin: 0, lineHeight: 1.5 }}>
-                  Questo prompt richiede <strong>{currentPromptForVars.variables.length} {currentPromptForVars.variables.length === 1 ? 'informazione' : 'informazioni'} personalizzate</strong>. 
-                  Compila {currentPromptForVars.variables.length === 1 ? 'il campo qui sotto' : 'i campi qui sotto'} per generare un prompt su misura per le tue esigenze.
-                </p>
-              </div>
-              
-              {currentPromptForVars.variables.map(variable => (
-                <div key={variable.name} style={{ marginBottom: 16 }}>
-                  <label className="form-label" htmlFor={`var-${variable.name}`}>
-                    {variable.label} <span style={{ color: '#ef4444' }}>*</span>
+              {!showPreview ? (
+                // 📝 VISTA FORM - Compilazione campi
+                <>
+                  {/* Messaggio informativo principale */}
+                  <div style={{ 
+                    marginBottom: 20, 
+                    padding: 14, 
+                    background: 'rgba(16, 185, 129, 0.1)', 
+                    borderRadius: 8,
+                    border: '2px solid rgba(16, 185, 129, 0.3)'
+                  }}>
+                    <p style={{ fontSize: 14, color: '#10b981', margin: 0, fontWeight: '600', marginBottom: 6 }}>
+                      ℹ️ Come funziona
+                    </p>
+                    <p style={{ fontSize: 13, color: '#cbd5e1', margin: 0, lineHeight: 1.5 }}>
+                      Compila {currentPromptForVars.variables.length === 1 ? 'il campo qui sotto' : `i ${currentPromptForVars.variables.length} campi qui sotto`} con le tue informazioni. 
+                      Puoi <strong>copiare direttamente</strong> o vedere l'<strong>anteprima</strong> per modificarlo prima.
+                    </p>
+                  </div>
+                  
+                  {currentPromptForVars.variables.map(variable => (
+                    <div key={variable.name} style={{ marginBottom: 16 }}>
+                      <label className="form-label" htmlFor={`var-${variable.name}`}>
+                        {variable.label} <span style={{ color: '#ef4444' }}>*</span>
+                      </label>
+                      <input
+                        id={`var-${variable.name}`}
+                        type={variable.type || 'text'}
+                        className="form-control"
+                        value={variableValues[variable.name] || ''}
+                        onChange={(e) => setVariableValues({
+                          ...variableValues,
+                          [variable.name]: e.target.value
+                        })}
+                        placeholder={variable.placeholder}
+                        required
+                      />
+                    </div>
+                  ))}
+                  
+                  <div style={{ 
+                    marginTop: 20, 
+                    padding: 12, 
+                    background: 'rgba(59, 130, 246, 0.1)', 
+                    borderRadius: 6,
+                    border: '1px solid rgba(59, 130, 246, 0.3)'
+                  }}>
+                    <p style={{ fontSize: 13, color: '#93c5fd', margin: 0 }}>
+                      💡 <strong>Tip:</strong> Usa "Anteprima" per vedere e modificare il prompt prima di copiarlo, oppure "Copia e chiudi" per un workflow veloce.
+                    </p>
+                  </div>
+                </>
+              ) : (
+                // 👁️ VISTA ANTEPRIMA - Modifica testo
+                <>
+                  <div style={{ 
+                    marginBottom: 16, 
+                    padding: 14, 
+                    background: 'rgba(59, 130, 246, 0.1)', 
+                    borderRadius: 8,
+                    border: '2px solid rgba(59, 130, 246, 0.3)'
+                  }}>
+                    <p style={{ fontSize: 14, color: '#3b82f6', margin: 0, fontWeight: '600', marginBottom: 6 }}>
+                      👁️ Anteprima prompt personalizzato
+                    </p>
+                    <p style={{ fontSize: 13, color: '#cbd5e1', margin: 0, lineHeight: 1.5 }}>
+                      Qui sotto vedi il prompt con i tuoi dati. <strong>Puoi modificarlo</strong> se necessario, poi copia negli appunti.
+                    </p>
+                  </div>
+
+                  <label className="form-label" htmlFor="preview-textarea">
+                    Prompt personalizzato (modificabile)
                   </label>
-                  <input
-                    id={`var-${variable.name}`}
-                    type={variable.type || 'text'}
+                  <textarea
+                    id="preview-textarea"
                     className="form-control"
-                    value={variableValues[variable.name] || ''}
-                    onChange={(e) => setVariableValues({
-                      ...variableValues,
-                      [variable.name]: e.target.value
-                    })}
-                    placeholder={variable.placeholder}
-                    required
+                    value={previewText}
+                    onChange={(e) => setPreviewText(e.target.value)}
+                    rows={12}
+                    style={{ 
+                      fontFamily: 'ui-monospace, monospace',
+                      fontSize: '13px',
+                      lineHeight: 1.6,
+                      resize: 'vertical'
+                    }}
                   />
-                </div>
-              ))}
-              
-              <div style={{ 
-                marginTop: 20, 
-                padding: 12, 
-                background: 'rgba(59, 130, 246, 0.1)', 
-                borderRadius: 6,
-                border: '1px solid rgba(59, 130, 246, 0.3)'
-              }}>
-                <p style={{ fontSize: 13, color: '#93c5fd', margin: 0 }}>
-                  💡 <strong>Suggerimento:</strong> Il prompt verrà automaticamente personalizzato e copiato negli appunti quando clicchi "Copia prompt personalizzato".
-                </p>
-              </div>
+
+                  <div style={{ 
+                    marginTop: 16, 
+                    padding: 10, 
+                    background: 'rgba(16, 185, 129, 0.1)', 
+                    borderRadius: 6,
+                    border: '1px solid rgba(16, 185, 129, 0.3)'
+                  }}>
+                    <p style={{ fontSize: 12, color: '#10b981', margin: 0 }}>
+                      ✏️ <strong>Puoi modificare il testo sopra</strong> prima di copiarlo negli appunti!
+                    </p>
+                  </div>
+                </>
+              )}
             </div>
 
             <div className="modal__actions">
-              <button className="btn-blue" onClick={copyWithVariables}>
-                📋 Copia prompt personalizzato
-              </button>
-              <button className="btn-blue btn-ghost" onClick={() => setVariablesModalOpen(false)}>
-                Annulla
-              </button>
+              {!showPreview ? (
+                // Bottoni quando è in modalità FORM
+                <>
+                  <button className="btn-blue" onClick={showPromptPreview} style={{ background: '#3b82f6' }}>
+                    👁️ Anteprima
+                  </button>
+                  <button className="btn-blue" onClick={copyWithVariables}>
+                    📋 Copia e chiudi
+                  </button>
+                  <button className="btn-blue btn-ghost" onClick={() => {
+                    setVariablesModalOpen(false);
+                    setShowPreview(false);
+                    setPreviewText('');
+                  }}>
+                    Annulla
+                  </button>
+                </>
+              ) : (
+                // Bottoni quando è in modalità ANTEPRIMA
+                <>
+                  <button className="btn-blue" onClick={() => setShowPreview(false)}>
+                    ← Modifica campi
+                  </button>
+                  <button className="btn-blue" onClick={copyFromPreview} style={{ background: '#10b981' }}>
+                    📋 Copia prompt
+                  </button>
+                  <button className="btn-blue btn-ghost" onClick={() => {
+                    setVariablesModalOpen(false);
+                    setShowPreview(false);
+                    setPreviewText('');
+                  }}>
+                    Annulla
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </div>

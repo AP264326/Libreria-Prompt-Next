@@ -585,3 +585,21 @@ textarea.form-control:focus {
     color: #e5e7eb;
   }
 }
+
+/* Fix visibilità label in dark mode per modale variabili */
+[data-color-scheme="dark"] .form-label,
+.modal .form-label {
+  color: #e5e7eb !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  .modal .form-label {
+    color: #e5e7eb !important;
+  }
+}
+
+/* Assicura che anche lo span (facoltativo) sia visibile */
+.form-label span {
+  color: inherit;
+  opacity: 0.8;
+}

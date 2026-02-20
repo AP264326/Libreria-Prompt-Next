@@ -502,3 +502,55 @@ mark { background: #fde68a; color: #111; padding: 0 2px; border-radius: 3px; }
     color: #f59e0b;
   }
 }
+
+/* ============================================
+   NUOVI STILI PER SISTEMA VARIABILI
+   ============================================ */
+
+/* Form controls per modale variabili */
+.form-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-base);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  transition: all var(--duration-fast) var(--ease-standard);
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: var(--focus-ring);
+}
+
+.form-control::placeholder {
+  color: var(--color-text-secondary);
+  opacity: 0.6;
+}
+
+/* Dark mode form controls */
+@media (prefers-color-scheme: dark) {
+  .form-control {
+    background-color: #1f2937;
+    border-color: #374151;
+    color: #e5e7eb;
+  }
+  
+  .form-label {
+    color: #e5e7eb;
+  }
+  
+  .form-control:focus {
+    border-color: var(--color-primary);
+  }
+}

@@ -656,9 +656,10 @@ export default function Page() {
                           borderRadius: '4px', 
                           fontSize: '11px',
                           fontWeight: '600',
-                          whiteSpace: 'nowrap'
+                          whiteSpace: 'nowrap',
+                          cursor: 'help'
                         }}
-                        title={`Questo prompt ha ${p.variables.length} ${p.variables.length === 1 ? 'campo' : 'campi'} da personalizzare`}
+                        title={`📝 Prompt personalizzabile - Clicca "Copia" per compilare ${p.variables.length} ${p.variables.length === 1 ? 'campo' : 'campi'} su misura`}
                       >
                         📝 {p.variables.length}
                       </span>
@@ -828,9 +829,22 @@ export default function Page() {
             </div>
 
             <div className="modal__body" style={{ paddingTop: 16 }}>
-              <p style={{ marginBottom: 20, color: '#cbd5e1' }}>
-                Compila i campi sottostanti per personalizzare il prompt <strong>{currentPromptForVars.title}</strong>
-              </p>
+              {/* Messaggio informativo principale */}
+              <div style={{ 
+                marginBottom: 20, 
+                padding: 14, 
+                background: 'rgba(16, 185, 129, 0.1)', 
+                borderRadius: 8,
+                border: '2px solid rgba(16, 185, 129, 0.3)'
+              }}>
+                <p style={{ fontSize: 14, color: '#10b981', margin: 0, fontWeight: '600', marginBottom: 6 }}>
+                  ℹ️ Prompt personalizzabile
+                </p>
+                <p style={{ fontSize: 13, color: '#cbd5e1', margin: 0, lineHeight: 1.5 }}>
+                  Questo prompt richiede <strong>{currentPromptForVars.variables.length} {currentPromptForVars.variables.length === 1 ? 'informazione' : 'informazioni'} personalizzate</strong>. 
+                  Compila {currentPromptForVars.variables.length === 1 ? 'il campo qui sotto' : 'i campi qui sotto'} per generare un prompt su misura per le tue esigenze.
+                </p>
+              </div>
               
               {currentPromptForVars.variables.map(variable => (
                 <div key={variable.name} style={{ marginBottom: 16 }}>
@@ -860,8 +874,7 @@ export default function Page() {
                 border: '1px solid rgba(59, 130, 246, 0.3)'
               }}>
                 <p style={{ fontSize: 13, color: '#93c5fd', margin: 0 }}>
-                  💡 <strong>Suggerimento:</strong> Una volta compilati tutti i campi, il prompt verrà automaticamente 
-                  personalizzato con i tuoi dati e copiato negli appunti.
+                  💡 <strong>Suggerimento:</strong> Il prompt verrà automaticamente personalizzato e copiato negli appunti quando clicchi "Copia prompt personalizzato".
                 </p>
               </div>
             </div>

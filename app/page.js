@@ -22,8 +22,11 @@ const DEFAULT_PROMPTS = [
     description:
       "Analizza un'azienda target e redigi un identikit energetico completo con opportunità commerciali.",
     text:
-      "Analizza l'azienda [NOME AZIENDA] e crea un identikit approfondito orientato alla consulenza energetica. Raccogli e sintetizza le seguenti informazioni (se disponibili da fonti pubbliche):\n🔹 Profilo generale dell'azienda\n– Ragione sociale, anno di fondazione, struttura societaria\n– Storia e sviluppo aziendale\n– Settore merceologico / categoria ATECO\n– Sedi operative, stabilimenti e presenza territoriale\n🔹 Dimensioni e struttura economica\n– Numero dipendenti\n– Fatturato annuo e trend economico (ultimi 3 anni)\n– Presenza di stabilimenti energivori o grandi superfici\n🔹 Consumo e fabbisogno energetico potenziale\n– Indizi sulla potenza impegnata / consumi elettrici stimati\n– Tipologia di utenze: produttive, logistiche, direzionali, commerciali\n– Presenza di turnazioni h24 o lavorazioni energivore\n🔹 Stato attuale dell'approvvigionamento energetico\n– Indizi su contratti luce/gas\n– Presenza di sistemi di monitoraggio energetico\n– Presenza di impianti di autoproduzione (es. fotovoltaico, cogenerazione)\n– Presenza di colonnine EV o politiche ESG\n🔹 Altri elementi strategici o opportunità commerciali\n– Eventuali criticità energetiche o opportunità di ottimizzazione\n– Progetti recenti di efficienza energetica, sostenibilità o digitalizzazione\n– Collaborazioni con ESCo o consulenti energetici\nFornisci il profilo sotto forma di scheda strutturata (tipo report operativo per consulente). Evidenzia opportunità di intervento commerciale, criticità e punti di forza. Se i dati non sono disponibili, segnala l'informazione come non reperita.",
-    tags: ['Perplexity']
+      "Analizza l'azienda [NOME_AZIENDA] e crea un identikit approfondito orientato alla consulenza energetica. Raccogli e sintetizza le seguenti informazioni (se disponibili da fonti pubbliche):\n🔹 Profilo generale dell'azienda\n– Ragione sociale, anno di fondazione, struttura societaria\n– Storia e sviluppo aziendale\n– Settore merceologico / categoria ATECO\n– Sedi operative, stabilimenti e presenza territoriale\n🔹 Dimensioni e struttura economica\n– Numero dipendenti\n– Fatturato annuo e trend economico (ultimi 3 anni)\n– Presenza di stabilimenti energivori o grandi superfici\n🔹 Consumo e fabbisogno energetico potenziale\n– Indizi sulla potenza impegnata / consumi elettrici stimati\n– Tipologia di utenze: produttive, logistiche, direzionali, commerciali\n– Presenza di turnazioni h24 o lavorazioni energivore\n🔹 Stato attuale dell'approvvigionamento energetico\n– Indizi su contratti luce/gas\n– Presenza di sistemi di monitoraggio energetico\n– Presenza di impianti di autoproduzione (es. fotovoltaico, cogenerazione)\n– Presenza di colonnine EV o politiche ESG\n🔹 Altri elementi strategici o opportunità commerciali\n– Eventuali criticità energetiche o opportunità di ottimizzazione\n– Progetti recenti di efficienza energetica, sostenibilità o digitalizzazione\n– Collaborazioni con ESCo o consulenti energetici\nFornisci il profilo sotto forma di scheda strutturata (tipo report operativo per consulente). Evidenzia opportunità di intervento commerciale, criticità e punti di forza. Se i dati non sono disponibili, segnala l'informazione come non reperita.",
+    tags: ['Perplexity'],
+    variables: [
+      { name: 'NOME_AZIENDA', label: 'Nome Azienda', placeholder: 'es. Acme Srl', type: 'text' }
+    ]
   },
   {
     id: 'pr1',
@@ -32,7 +35,14 @@ const DEFAULT_PROMPTS = [
     description:
       'Email di presentazione, script telefonico, domande e obiezioni per il primo contatto con cliente potenziale.',
     text:
-      "Crea un pacchetto completo con i miei dati [nome e cognome, ruolo, sede di lavoro e contatti], per un primo contatto con il potenziale cliente [nome cliente], includendo:\n1. Un'email di presentazione efficace che offra gratuitamente un'analisi dettagliata della bolletta elettrica e un check-up energetico personalizzato.\n2. Uno script telefonico strutturato per il follow-up, orientato a coinvolgere il cliente e fissare un appuntamento.\n3. Tre domande chiave da porre durante la telefonata per valutare la qualificazione del cliente rispetto a un'offerta fotovoltaica o a una consulenza sulla bolletta.\n4. Tre obiezioni comuni che il cliente potrebbe sollevare, con relative risposte persuasive e professionali per superarle."
+      "Crea un pacchetto completo con i miei dati [TUO_NOME_COGNOME], ruolo [TUO_RUOLO], sede di lavoro [TUA_SEDE] e contatti [TUOI_CONTATTI], per un primo contatto con il potenziale cliente [NOME_CLIENTE], includendo:\n1. Un'email di presentazione efficace che offra gratuitamente un'analisi dettagliata della bolletta elettrica e un check-up energetico personalizzato.\n2. Uno script telefonico strutturato per il follow-up, orientato a coinvolgere il cliente e fissare un appuntamento.\n3. Tre domande chiave da porre durante la telefonata per valutare la qualificazione del cliente rispetto a un'offerta fotovoltaica o a una consulenza sulla bolletta.\n4. Tre obiezioni comuni che il cliente potrebbe sollevare, con relative risposte persuasive e professionali per superarle.",
+    variables: [
+      { name: 'TUO_NOME_COGNOME', label: 'Il tuo nome e cognome', placeholder: 'es. Mario Rossi', type: 'text' },
+      { name: 'TUO_RUOLO', label: 'Il tuo ruolo', placeholder: 'es. Energy Consultant', type: 'text' },
+      { name: 'TUA_SEDE', label: 'La tua sede di lavoro', placeholder: 'es. Milano', type: 'text' },
+      { name: 'TUOI_CONTATTI', label: 'I tuoi contatti', placeholder: 'es. mario.rossi@email.it, +39 123 456 7890', type: 'text' },
+      { name: 'NOME_CLIENTE', label: 'Nome del cliente', placeholder: 'es. Beta Industries', type: 'text' }
+    ]
   },
   {
     id: 'pp1',
@@ -41,7 +51,12 @@ const DEFAULT_PROMPTS = [
     description:
       'Proposta commerciale fotovoltaico con ROI e confronto bolletta.',
     text:
-      'Crea una proposta commerciale per il cliente [nome azienda], evidenziando i benefici di un impianto fotovoltaico da [kWp], ROI stimato in [X] anni, e confronto con il costo attuale in bolletta.'
+      'Crea una proposta commerciale per il cliente [NOME_AZIENDA], evidenziando i benefici di un impianto fotovoltaico da [KWP] kWp, ROI stimato in [ANNI_ROI] anni, e confronto con il costo attuale in bolletta.',
+    variables: [
+      { name: 'NOME_AZIENDA', label: 'Nome Azienda Cliente', placeholder: 'es. Delta Srl', type: 'text' },
+      { name: 'KWP', label: 'Potenza impianto (kWp)', placeholder: 'es. 100', type: 'number' },
+      { name: 'ANNI_ROI', label: 'Anni ROI stimato', placeholder: 'es. 5', type: 'number' }
+    ]
   },
   {
   id: 'co2',
@@ -224,6 +239,11 @@ export default function Page() {
   const [modalOpen, setModalOpen] = useState(false);
   const [activePrompt, setActivePrompt] = useState(null);
 
+  // 🆕 NUOVI useState PER SISTEMA VARIABILI
+  const [variablesModalOpen, setVariablesModalOpen] = useState(false);
+  const [currentPromptForVars, setCurrentPromptForVars] = useState(null);
+  const [variableValues, setVariableValues] = useState({});
+
   const [isAdmin, setIsAdmin] = useState(false);
   const [adminModalOpen, setAdminModalOpen] = useState(false);
   const [adminPass, setAdminPass] = useState('');
@@ -300,6 +320,16 @@ export default function Page() {
   const copyPrompt = async (id) => {
     const p = prompts.find((x) => x.id === id);
     if (!p) return;
+    
+    // 🆕 Se il prompt ha variabili, apri il form invece di copiare direttamente
+    if (p.variables && p.variables.length > 0) {
+      setCurrentPromptForVars(p);
+      setVariableValues({});  // resetta i valori
+      setVariablesModalOpen(true);
+      return;
+    }
+    
+    // Se non ha variabili, copia normalmente
     try {
       await navigator.clipboard.writeText(p.text);
       showToast('Prompt copiato negli appunti!');
@@ -318,6 +348,44 @@ export default function Page() {
       } finally {
         document.body.removeChild(ta);
       }
+    }
+  };
+
+  // 🆕 NUOVE FUNZIONI PER GESTIRE LE VARIABILI
+  const replaceVariables = (text, values) => {
+    let result = text;
+    Object.keys(values).forEach(key => {
+      const regex = new RegExp(`\\[${key}\\]`, 'g');
+      result = result.replace(regex, values[key] || `[${key}]`);
+    });
+    return result;
+  };
+
+  const copyWithVariables = async () => {
+    if (!currentPromptForVars) return;
+    
+    // Verifica che tutti i campi obbligatori siano compilati
+    const missingFields = currentPromptForVars.variables.filter(
+      v => !variableValues[v.name] || variableValues[v.name].trim() === ''
+    );
+    
+    if (missingFields.length > 0) {
+      showToast(`⚠️ Compila tutti i campi: ${missingFields.map(v => v.label).join(', ')}`);
+      return;
+    }
+    
+    // Sostituisci le variabili nel testo
+    const finalText = replaceVariables(currentPromptForVars.text, variableValues);
+    
+    // Copia negli appunti
+    try {
+      await navigator.clipboard.writeText(finalText);
+      showToast('✅ Prompt personalizzato copiato!');
+      setVariablesModalOpen(false);
+      setCurrentPromptForVars(null);
+      setVariableValues({});
+    } catch {
+      showToast('❌ Errore durante la copia.');
     }
   };
 
@@ -569,13 +637,32 @@ export default function Page() {
                     className="prompt-card__title"
                     dangerouslySetInnerHTML={{ __html: highlight(p.title, search) }}
                   />
-                  <div style={{ display:'flex', alignItems:'center', gap:6, flexWrap:'wrap' }}>
-                    <span className="prompt-card__category">{p.category}</span>
-                    {(p.tags || []).map((t, idx) => (
-                      <span key={idx} style={tagStyle}>
-                        {t}
+                  <div style={{ display:'flex', alignItems:'center', gap:6, flexWrap:'wrap', justifyContent:'space-between' }}>
+                    <div style={{ display:'flex', alignItems:'center', gap:6, flexWrap:'wrap' }}>
+                      <span className="prompt-card__category">{p.category}</span>
+                      {(p.tags || []).map((t, idx) => (
+                        <span key={idx} style={tagStyle}>
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                    {/* 🆕 Indicatore variabili */}
+                    {p.variables && p.variables.length > 0 && (
+                      <span 
+                        style={{ 
+                          background: '#10b981', 
+                          color: 'white', 
+                          padding: '3px 8px', 
+                          borderRadius: '4px', 
+                          fontSize: '11px',
+                          fontWeight: '600',
+                          whiteSpace: 'nowrap'
+                        }}
+                        title={`Questo prompt ha ${p.variables.length} ${p.variables.length === 1 ? 'campo' : 'campi'} da personalizzare`}
+                      >
+                        📝 {p.variables.length}
                       </span>
-                    ))}
+                    )}
                   </div>
                 </div>
 
@@ -720,6 +807,72 @@ export default function Page() {
             <div className="modal__actions">
               <button className="btn-blue" onClick={acceptDisclaimer}>Ho letto e capisco</button>
               <button className="btn-blue btn-ghost" onClick={() => setDisclaimerOpen(false)}>Chiudi</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 🆕 Modale Variabili */}
+      {variablesModalOpen && currentPromptForVars && (
+        <div
+          className="modal-backdrop"
+          onClick={(e) => { if (e.target.classList.contains('modal-backdrop')) setVariablesModalOpen(false); }}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Personalizza variabili"
+        >
+          <div className="modal">
+            <div className="modal__header">
+              <h3 className="modal__title">📝 Personalizza il prompt</h3>
+              <button className="modal__close" onClick={() => setVariablesModalOpen(false)} aria-label="Chiudi">✕</button>
+            </div>
+
+            <div className="modal__body" style={{ paddingTop: 16 }}>
+              <p style={{ marginBottom: 20, color: '#cbd5e1' }}>
+                Compila i campi sottostanti per personalizzare il prompt <strong>{currentPromptForVars.title}</strong>
+              </p>
+              
+              {currentPromptForVars.variables.map(variable => (
+                <div key={variable.name} style={{ marginBottom: 16 }}>
+                  <label className="form-label" htmlFor={`var-${variable.name}`}>
+                    {variable.label} <span style={{ color: '#ef4444' }}>*</span>
+                  </label>
+                  <input
+                    id={`var-${variable.name}`}
+                    type={variable.type || 'text'}
+                    className="form-control"
+                    value={variableValues[variable.name] || ''}
+                    onChange={(e) => setVariableValues({
+                      ...variableValues,
+                      [variable.name]: e.target.value
+                    })}
+                    placeholder={variable.placeholder}
+                    required
+                  />
+                </div>
+              ))}
+              
+              <div style={{ 
+                marginTop: 20, 
+                padding: 12, 
+                background: 'rgba(59, 130, 246, 0.1)', 
+                borderRadius: 6,
+                border: '1px solid rgba(59, 130, 246, 0.3)'
+              }}>
+                <p style={{ fontSize: 13, color: '#93c5fd', margin: 0 }}>
+                  💡 <strong>Suggerimento:</strong> Una volta compilati tutti i campi, il prompt verrà automaticamente 
+                  personalizzato con i tuoi dati e copiato negli appunti.
+                </p>
+              </div>
+            </div>
+
+            <div className="modal__actions">
+              <button className="btn-blue" onClick={copyWithVariables}>
+                📋 Copia prompt personalizzato
+              </button>
+              <button className="btn-blue btn-ghost" onClick={() => setVariablesModalOpen(false)}>
+                Annulla
+              </button>
             </div>
           </div>
         </div>

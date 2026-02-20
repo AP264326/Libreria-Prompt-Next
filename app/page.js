@@ -683,8 +683,8 @@ export default function Page() {
                     className="prompt-card__title"
                     dangerouslySetInnerHTML={{ __html: highlight(p.title, search) }}
                   />
-                  <div style={{ display:'flex', alignItems:'center', gap:6, flexWrap:'wrap', justifyContent:'space-between' }}>
-                    <div style={{ display:'flex', alignItems:'center', gap:6, flexWrap:'wrap' }}>
+                  <div style={{ display:'flex', alignItems:'center', gap:6, flexWrap:'wrap', justifyContent:'space-between', width: '100%' }}>
+                    <div style={{ display:'flex', alignItems:'center', gap:6, flexWrap:'wrap', flex: '1 1 auto', minWidth: 0 }}>
                       <span className="prompt-card__category">{p.category}</span>
                       {(p.tags || []).map((t, idx) => (
                         <span key={idx} style={tagStyle}>
@@ -703,7 +703,9 @@ export default function Page() {
                           fontSize: '11px',
                           fontWeight: '600',
                           whiteSpace: 'nowrap',
-                          cursor: 'help'
+                          cursor: 'help',
+                          flexShrink: 0,
+                          marginLeft: 'auto'
                         }}
                         title={`📝 Prompt personalizzabile - Clicca "Copia" per compilare ${p.variables.length} ${p.variables.length === 1 ? 'campo' : 'campi'} su misura`}
                       >

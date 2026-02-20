@@ -554,3 +554,34 @@ mark { background: #fde68a; color: #111; padding: 0 2px; border-radius: 3px; }
     border-color: var(--color-primary);
   }
 }
+
+/* Textarea per anteprima prompt */
+textarea.form-control {
+  width: 100%;
+  padding: 12px;
+  font-size: 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-base);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  transition: all var(--duration-fast) var(--ease-standard);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  line-height: 1.6;
+  resize: vertical;
+  min-height: 200px;
+}
+
+textarea.form-control:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: var(--focus-ring);
+}
+
+/* Dark mode textarea */
+@media (prefers-color-scheme: dark) {
+  textarea.form-control {
+    background-color: #1f2937;
+    border-color: #374151;
+    color: #e5e7eb;
+  }
+}

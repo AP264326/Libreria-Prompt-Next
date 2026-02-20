@@ -136,16 +136,6 @@ const DEFAULT_PROMPTS = [
     text:
       'Crea un pacchetto completo con i miei dati, per [nome cliente] che ha ricevuto la proposta tre giorni fa:\n1. E-mail di follow-up professionale.\n2. Script telefonico per follow-up.\n3. Tre domande chiave per la telefonata.\n4. Tre obiezioni comuni con risposte.'
   },
-  {
-    id: 'cb1',
-    title: 'Gestione Customer Base – Email post installazione',
-    category: 'Gestione Customer Base',
-    description:
-      'Email di ringraziamento, assistenza e richiesta feedback post installazione.',
-    text:
-      'Crea una e-mail post installazione per ringraziare il cliente, offrire assistenza e richiedere feedback.'
-  },
-
   /* ===== Analisi di Mercato ===== */
   {
     id: 'm1',
